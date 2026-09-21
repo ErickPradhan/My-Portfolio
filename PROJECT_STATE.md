@@ -1,212 +1,384 @@
-# Project State
+# Project Overview
 
-## 1. Project Overview
+This project is a single-page portfolio website for Erick Pradhan, positioned as an AI/ML engineer and computing student. It is implemented as a static, front-end-only site with no framework, package manager, backend, or build pipeline. The experience is intentionally designed as a dark, futuristic portfolio with animated sections, a custom neural background canvas, project cards, and a rule-based AI assistant chat modal.
 
-A static, single-page "dark futuristic AI/ML engineer" portfolio for Erick Pradhan. Hand-built with plain HTML, CSS, and vanilla JavaScript — no framework, no build tool, no runtime dependencies. Deployed on Vercel static hosting. Scrollytelling-style with sections for hero, projects/work, about, skills, timeline, AI Lab, CV, and contact. Includes a rule-based in-page AI assistant.
+The site is built to be lightweight, portable, and deployable on Vercel static hosting with no code generation or server runtime. The repository currently contains a small root-level structure with HTML, CSS, JavaScript, PDFs, and image assets only.
 
-## 2. Technology Stack
+# Current Architecture
 
-- Framework: None (plain static site)
-- Language: HTML5, CSS3, vanilla JavaScript (no TypeScript)
-- Build tool: None (no build step)
-- Package manager: None (no package.json, no node_modules)
-- Styling: Single `styles.css` (minified base rules on long lines + readable appended overrides)
-- Animation: CSS keyframes + vanilla JS (IntersectionObserver reveal, pointermove tilt/magnetic, requestAnimationFrame canvas); no animation library
-- UI libraries: None (hand-written components)
-- Icon library: None (text glyphs: `↗`, `✦`, `☰`, `×`, `↓`)
-- Other important dependencies: None runtime. External: Google Fonts (Inter + Space Grotesk, async load with print-swap + noscript fallback). Deployment: Vercel (`vercel.json`, `.vercel/project.json`).
+The application is a single-page portfolio with all primary content embedded in the root-level HTML file rather than split into components or routes. There is no client-side routing system, no React/Vue/etc. codebase, and no backend or API layer.
 
-## 3. Project Structure
+The architecture follows a classic static HTML/CSS/JS pattern:
+- `index.html` contains the complete page structure and UI content.
+- `styles.css` contains the full design system, page layout, responsive rules, and animations.
+- `script.js` contains all interactive behaviors such as canvas animation, scroll reveal, nav highlighting, mobile menu, magnetic hover effects, and the AI assistant rules engine.
+- Static media files such as PDFs and images are served directly from the root and referenced by relative paths.
+- Deployment is handled by `vercel.json` and Vercel static hosting configuration.
 
-Root: `C:\Users\lenovo legion\Downloads\erick-pradhan-ai-portfolio\erick-pradhan-ai-portfolio\`
+This is a static portfolio architecture, not a multi-page app or a framework-driven application.
 
-- `index.html` — entire site (all sections, AI assistant dialog, JSON-LD schema)
-- `styles.css` — all styling (design tokens on :root, keyframes, responsive overrides)
-- `script.js` — all JS interactions (network canvas, reveal, nav, tilt/magnetic/cursor, mobile menu, AI assistant, matrix easter egg)
-- `vercel.json` — Vercel config: cleanUrls, trailingSlash false, header rules (CV download-as-attachment; cache for favicon/hero image)
-- `README.md` — maintainer notes
-- `.gitignore` — ignores `.vercel`
-- `.vercel/` — Vercel link metadata (projectId/orgId), not committed
-- `favicon.svg` — site icon
-- `Porfolio.jpg` — hero portrait (used), `Porfolio.png` — master source of portrait
-- `Erick_Pradhan.pdf` — CV (linked + download in CV section)
-- `IoT Smart Agriculture System.pdf` — present, NOT yet linked
-- `Diwali Sales Data Analysis.pdf` — present, NOT yet linked
-- Unused/legacy: `PortfolioImg.png`, `PortfolioImg1.png`, `audit-desktop.png`, `audit-desktop-final.png` (not referenced by index.html)
+# Technology Stack
 
-No `src/`, `components/`, `public/`, `assets/`, or build directories exist. All assets are flat in the project root.
+Verified items from the codebase:
+- HTML5
+- CSS3
+- Vanilla JavaScript
+- Google Fonts (Inter and Space Grotesk)
+- Vercel static hosting
+- No package.json present
+- No npm install dependencies present
+- No framework detected (`React`, `Next.js`, `Vue`, `Angular`, etc.)
+- No build tool detected (`Vite`, `Webpack`, `Parcel`, etc.)
+- No TypeScript configuration detected
+- No backend framework detected
+- No database or server-side runtime detected
 
-## 4. Application Structure
+Unverified or not present:
+- No authenticated API integration observed in source
+- No external AI model integration observed; the assistant is local rule-based JavaScript logic only
+- No environment variables file was found in the project root
 
-Single page; all sections inline in `index.html`.
+# File/Folder Map
 
-| Section | index.html lines | Element |
-|---|---|---|
-| Skip link | 31 | `.skip-link` |
-| Background canvas | 32 | `#network` (neural network animation) |
-| Scanlines / cursor glow | 33–34 | `.scanlines`, `.cursor-glow` |
-| Navbar | 36–47 | `.nav` (brand, `#desktopNav`, "Ask AI" button, hamburger) |
-| Hero | 50–76 | `.hero` (name, tagline, CTAs, portrait, scroll cue) |
-| Ticker | 78–91 | `.ticker` marquee |
-| Work / Projects | 93–132 | `#work` → `.projects` (2 hardcoded cards) |
-| About | 134–144 | `#about` (`about-statement`, `about-copy`, facts) |
-| Skills | 146–159 | `#skills` (skill-wall clusters + skill-meter bars) |
-| Journey / Timeline | 161–168 | `.timeline` (education, experience, certifications) |
-| AI Lab | 170–186 | `#lab` (terminal-styled console with lab-grid) |
-| CV | 188–193 | `.cv-card` + Download CV link |
-| Contact | 195–206 | `#contact` (email, GitHub, LinkedIn, YouTube) |
-| AI Assistant | 209–215 | `.assistant-fab`, `#assistant` dialog |
-| Footer | 217 | three-line footer |
+Project root: `c:\Users\lenovo legion\Downloads\My Porfolio\erick-pradhan-ai-portfolio`
 
-Navbar links: Work (`#work`), About (`#about`), Skills (`#skills`), AI Lab (`#lab`), Contact (`#contact`). Active section highlighted via scroll spy.
+Important files and folders:
+- `index.html` — complete page markup and section content
+- `styles.css` — all styling, design tokens, responsive rules, animations
+- `script.js` — interactions and assistant logic
+- `README.md` — project usage and maintenance guidance
+- `PROJECT_STATE.md` — current project snapshot / source of truth
+- `vercel.json` — Vercel deployment settings and static asset headers
+- `.gitignore` — excludes `.vercel` metadata from Git
+- `.vercel/project.json` — Vercel project metadata
+- `favicon.svg` — site favicon
+- `Porfolio.jpg` — portfolio hero image used in the main layout
+- `Porfolio.png` — source image for the portrait
+- `PortfolioImg.png` — legacy/duplicate image asset
+- `PortfolioImg1.png` — legacy/duplicate image asset
+- `Erick_Pradhan.pdf` — CV PDF
+- `IoT Smart Agriculture System.pdf` — project PDF
+- `Diwali Sales Data Analysis.pdf` — project PDF
+- `audit-desktop.png` and `audit-desktop-final.png` — likely audit screenshots; not referenced by the app
 
-## 5. Important Components
+Notable absence:
+- There is no `src/` directory
+- There is no `public/` directory
+- There is no `components/` directory
+- There is no `package.json`
+- There is no `node_modules`
+- There is no `.env` file or environment config file with secrets
 
-No component system exists. Notable inline "components" and behaviors:
+# Important Components
 
-- Navbar: `index.html:36-47`. Fixed, blur backdrop, mobile hamburger with `mobile-open` class toggle.
-- Project cards: `index.html:99-129`. `<article class="project-card tilt reveal">`, inline hardcoded; see section 6.
-- News ticker: `index.html:78-91`. Duplicate `.ticker-group` blocks, `marquee` 60s infinite CSS animation.
-- AI assistant: `index.html:209-215` + `script.js:33-53`. Rule-based regex Q&A over a static `answers` array; FAB/nav open; Escape closes; Tab focus trap; "matrix" Easter egg swaps `--blue` to green for 3s.
-- Hero portrait: `index.html:66-74` + `styles.css:43-122`. Clipped frame (`clip-path` polygon), dark blue-tint gradient overlays, hover static (no tilt).
-- CV card: `index.html:188-193`. "Download CV" uses `<a href="Erick_Pradhan.pdf" download>`.
+The page is not composed from reusable framework components; instead, it uses distinct sections and repeated inline blocks defined directly in `index.html`.
 
-## 6. Projects / Work Section
+Important sections in `index.html`:
+- Header navigation and brand
+- Hero section with portrait and calls to action
+- Ticker marquee
+- Process section explaining how work is approached
+- Work/projects section
+- About section
+- Skills section
+- Journey/timeline section
+- AI Lab mock terminal section
+- CV section
+- Contact section
+- AI assistant chat modal
+- Footer
 
-- Project data source: **hardcoded HTML inside `index.html`** — no data file, no render loop, no props.
-- Project card component: inline `<article class="project-card tilt reveal">` (2 instances).
-- Card structure (both identical):
-  1. `.project-top` — series number + status (e.g. `01 / IOT` · `FIELD SYSTEM`)
-  2. `.project-visual` — **pure CSS illustration** (no images):
-     - `.agriculture`: `.plant`, `.soil`, `.sensor.s1/.s2` (MOIST/TEMP), `.signal` (animated)
-     - `.sales`: `.bars i` ×7 (animated heights), `.chart-line` (dead div, has NO CSS rule), `.chart-labels` (JAN…SEP)
-  3. `.project-body` — `.tag` (category), `h2` (title), `p` (description, `text-align: justify`), `.techs span` (chips), `.project-links`
-- Categories: via `.tag` (e.g. `IoT · SMART AGRICULTURE`, `DATA ANALYSIS · PYTHON`).
-- Technology tags: `.techs span` chips.
-- Hover: CSS `translateY(-7px)` + border-color blue + shadow; JS 3D tilt via `.tilt` class (disabled under 900px and under `prefers-reduced-motion`).
-- Reveal animation: `.reveal` + IntersectionObserver threshold 0.12.
-- Responsive: `.projects` grid `1fr 1fr` → `1fr` at ≤900px; `.project-visual` 330px → 260px at ≤560px.
+Notable behaviors defined in `script.js`:
+- Canvas-based animated network background
+- Reveal-on-scroll effect using `IntersectionObserver`
+- Scroll spy highlighting for nav links
+- Mobile navigation toggle
+- Magnetic hover effect on buttons
+- 3D tilt effect for project cards
+- AI assistant open/close + suggestion buttons
+- Keyboard focus-management within the assistant dialog
+- Easter egg triggered by typing the key sequence "matrix"
 
-## 7. Current Projects
+# Routes and Navigation
 
-### IoT Smart Agriculture (card at index.html:99-113)
-- Category: `IoT · SMART AGRICULTURE`
-- Description: IoT-based smart agriculture system using Raspberry Pi and Arduino Uno to monitor soil moisture and environmental conditions in real time; sensor data collection, monitoring dashboard, automated irrigation.
+This project uses a single-page structure and anchor-based navigation only.
+
+Internal anchors in `index.html`:
+- `#work`
+- `#about`
+- `#skills`
+- `#lab`
+- `#contact`
+
+These are linked through the top navigation and appear as smooth-scroll jumps via CSS. There are no route files, no route config, and no router library.
+
+External links include:
+- GitHub
+- LinkedIn
+- YouTube
+- Project repositories
+- PDF downloads
+
+All external links open in a new tab using `target="_blank"` and `rel="noopener noreferrer"` when present.
+
+# Data Flow
+
+Data flow is minimal and entirely front-end driven:
+- Content is directly embedded in `index.html`.
+- Styling is static in `styles.css`.
+- Interactions are logic-driven in `script.js`.
+- The AI assistant does not call an external API; it uses a local `answers` array and regex matching in JavaScript.
+- No fetch, axios, GraphQL, or REST calls were found in the inspected source.
+- No backend nor database layer is present.
+- No state management library is in use.
+
+This means the site is effectively a static content presentation layer with client-side effects only.
+
+# APIs and Integrations
+
+No backend API integration is found in the project source.
+
+Observed integrations:
+- Google Fonts CDN for typography
+- Vercel static hosting configuration
+- External social/profile links
+- PDF assets served directly from the root
+
+Not observed:
+- No Firebase integration
+- No Supabase integration
+- No CMS integration
+- No analytics SDK
+- No payment integration
+- No user auth system
+
+The AI assistant is not connected to an LLM or server endpoint; it is a rule-based local helper.
+
+# AI/ML Functionality
+
+The site presents itself as an AI/ML engineer portfolio, but the actual AI functionality present is limited and local.
+
+Verified AI-related behavior:
+- A floating “Ask AI”/“Ask Erick AI” assistant appears in the interface.
+- It is implemented in `script.js` using a static array of question patterns and matching answers.
+- It recognizes user input via regular expressions and responds with prewritten responses.
+- It includes a few suggested prompts and a chat UI.
+
+What is not present:
+- No model inference runtime
+- No OpenAI/Anthropic/Gemini API key usage
+- No external AI service call
+- No vector database or RAG workflow
+- No custom ML model deployment
+
+Therefore this project can be described as “portfolio branding plus a front-end AI assistant mockup,” not a real AI product backend.
+
+# Design System
+
+The overall aesthetic is a dark, futuristic, cyber-tech look.
+
+Design tokens in `styles.css`:
+- `--bg`: near-black background
+- `--panel`: dark gray panels
+- `--text`: light text
+- `--muted`: gray text
+- `--line`: faint border color
+- `--blue` / `--blue2`: primary accent colors
+- `--max`: max content width
+
+Observed styling patterns:
+- High contrast dark surfaces
+- Blue accent glow and neon-like hover states
+- Lowercase and uppercase label styling with letter spacing
+- Sharp corners with subtle glassmorphism via translucent panels
+- Strong typography hierarchy using Space Grotesk and Inter
+- Responsive layout based on standard breakpoints and CSS grid/flexbox
+
+# Animations and Interactions
+
+The project uses CSS and JavaScript for light motion layering.
+
+Observed animations:
+- Network background canvas animation
+- Reveal-on-scroll animations for sections
+- Magnetic button movement
+- 3D tilt on project cards
+- Marquee ticker loop
+- Sensor pulse animation in the IoT-themed project visual
+- Animated sales chart bars
+- Cursor glow following pointer movement
+- Focus ring accessibility outlines
+- Matrix easter egg color override
+
+Motion behavior is reduced for users who prefer reduced motion via `prefers-reduced-motion` checks.
+
+# Projects/Cards/Links
+
+The portfolio includes two primary project cards in `index.html`.
+
+Project 1: IoT Smart Agriculture
+- File reference: `index.html`
+- Summary: sensor-driven smart agriculture monitoring with Raspberry Pi and Arduino Uno
 - Technologies: Python, Arduino Uno, Raspberry Pi, IoT
-- Repository: `https://github.com/ErickPradhan/Iot-Smart-Agricultural-System`
-- Project/PDF link: `IoT%20Smart%20Agriculture%20System.pdf` (new tab via `View Project <span>↗</span>`)
-- Visualization: CSS `.agriculture` scene with animated signal
+- Project PDF: `IoT Smart Agriculture System.pdf`
+- Repository: external GitHub link
+- Current link pattern: `View Project` and `View Repository`
 
-### Diwali Sales Data Analysis (card at index.html:115-129)
-- Category: `DATA ANALYSIS · PYTHON`
-- Description: End-to-end exploratory analysis of Diwali sales data — customer behaviour, demographic trends, product preferences, regional patterns; cleaning, feature engineering, statistical testing, visualisations.
+Project 2: Diwali Sales Data Analysis
+- File reference: `index.html`
+- Summary: sales analysis with Python-based data cleaning and exploratory analysis
 - Technologies: Python, Pandas, NumPy, Matplotlib, SciPy
-- Repository: `https://github.com/ErickPradhan/DiwaliSales-DataAnalysis`
-- Project/PDF link: `Diwali%20Sales%20Data%20Analysis.pdf` (new tab via `View Project <span>↗</span>`)
-- Visualization: CSS `.sales` bar chart with animated bars
+- Project PDF: `Diwali Sales Data Analysis.pdf`
+- Repository: external GitHub link
+- Current link pattern: `View Project` and `View Repository`
 
-## 8. Assets
+Important note:
+- No project data is abstracted into a JSON file or CMS; the cards are hardcoded directly in the HTML.
+- The project visuals are CSS-based illustrations rather than imported asset images.
 
-- Images: `Porfolio.jpg` (hero, used), `Porfolio.png` (master), `PortfolioImg.png`, `PortfolioImg1.png`, `audit-desktop.png`, `audit-desktop-final.png` (unused legacy)
-- Fonts: Google Fonts (Inter, Space Grotesk) — no local font files
-- PDFs (all in project root, all publicly served by Vercel):
-  - `Erick_Pradhan.pdf` — linked (download)
-  - `IoT Smart Agriculture System.pdf` — present, linked to its card's "View Project" button
-  - `Diwali Sales Data Analysis.pdf` — present, linked to its card's "View Project" button
-- Static serving: Vercel serves project root; files have root-relative URLs (e.g. `/Erick_Pradhan.pdf`).
+# Assets
 
-## 9. Routing and Links
+Important asset files at the root:
+- `Porfolio.jpg` — primary portrait image used in hero section
+- `Porfolio.png` — original portrait source
+- `Erick_Pradhan.pdf` — resume/cv
+- `IoT Smart Agriculture System.pdf` — IoT project PDF
+- `Diwali Sales Data Analysis.pdf` — sales analysis PDF
+- `favicon.svg` — site favicon
 
-- Internal: anchor links only (`href="#section"`), smooth scroll via CSS `scroll-behavior: smooth`; no routing library, no SPA routes.
-- External (all `target="_blank" rel="noopener noreferrer"`): GitHub, LinkedIn, YouTube, both repository links.
-- GitHub project links: "View Repository ↗" in each card — external, new tab.
-- PDF links: CV (`Erick_Pradhan.pdf`, `download` attribute) and both project "View Project" links — `IoT%20Smart%20Agriculture%20System.pdf`, `Diwali%20Sales%20Data%20Analysis.pdf`, each `target="_blank" rel="noopener noreferrer"` new-tab.
-- Vercel config: `cleanUrls: true`, `trailingSlash: false`; no rewrites/redirects that would block static files.
-- Header rules in vercel.json:
-  - `/Erick_Pradhan.pdf` → `Content-Disposition: attachment` (forces download)
-  - `/(favicon.svg|Porfolio.jpg)` → cache immutable 7 days
-  - The two project PDFs have NO header rule → Vercel serves them inline (browser PDF viewer), supporting new-tab open.
+Legacy or unused-looking assets:
+- `PortfolioImg.png`
+- `PortfolioImg1.png`
+- `audit-desktop.png`
+- `audit-desktop-final.png`
 
-## 10. Design System (verified)
+These are not clearly referenced in the main page logic and appear to be leftover or support files rather than currently active app assets.
 
-Design tokens (`styles.css:1`): `--bg:#05070a`, `--panel:#0a0e13`, `--panel2:#0d1219`, `--text:#f4f7fb`, `--muted:#8793a3`, `--line:rgba(255,255,255,.09)`, `--blue:#2e9bff`, `--blue2:#74c2ff`, `--glow:rgba(46,155,255,.2)`, `--max:1240px`.
+# Dependencies
 
-- Backgrounds: near-black `#05070a`; panels `#0a0e13`/`#0d1219`; card gradient `linear-gradient(145deg, rgba(255,255,255,.035), rgba(255,255,255,.012))`.
-- Accents: blue `#2e9bff` / light blue `#74c2ff`; glows via `box-shadow: 0 0 Npx rgba(46,155,255,…)`.
-- Typography: fonts Inter (body) + Space Grotesk (headings/labels); uppercase small-caps labels with 1.5–2px letter-spacing; project card h2 700/27px; hero h1 800 `clamp(76px,11vw,…)`.
-- Borders: `1px solid var(--line)`; card visual borders; no border-radius on cards (sharp corners), 5px radius on `.btn`.
-- Shadows/glow: primary btn `0 0 30px rgba(46,155,255,.18)`; card hover `0 20px 60px rgba(0,0,0,.35)`; portrait `0 0 70px rgba(46,155,255,.16)`.
-- Buttons: `.btn` (ghost) and `.btn.primary` (blue bg, `#00111f` text); hover `translateY(-3px)` + shadow.
-- Layout: `.section` max-width 1240px, padding 140px 28px (→ 100px 20px ≤900px).
-- Responsive breakpoints: 900px (nav→menu, single-column grids, hero portrait absolute) and 560px (single columns, font-scale downs).
+The project does not include dependency management or package installation steps.
 
-## 11. Interaction System
+Current dependency state:
+- No `package.json`
+- No `package-lock.json`
+- No `node_modules`
+- No npm dependencies
+- No framework lockfile
 
-- Card 3D tilt: JS pointermove `perspective(900px) rotateX/rotateY + translateY(-7px)`, reset on pointerleave; disabled <900px width and when `prefers-reduced-motion` (`script.js:24`).
-- Card hover: CSS border-color → blue, `translateY(-7px)`, deep shadow.
-- "View Project" link (`.project-links a.view-project`, both cards): explicit visible baseline `display:inline-block; color:#c4ccd5;` with 0.25s color/text-shadow/transform transitions; hover brightens to `var(--blue2)` with blue glow `text-shadow: 0 0 14px rgba(46,155,255,.35)`; arrow `<span>` nudges `translateX(4px)`. Repository links retain their original plain hover (color → blue).
-- Magnetic buttons: `.magnetic` pointermove translate (~0.12 factor) (`script.js:24`).
-- Scroll reveal: `.reveal` opacity/translateY 0.8s; IntersectionObserver adds `.visible`; reduced-motion adds visible immediately.
-- Cursor glow: fixed 300px radial `.cursor-glow` follows pointer (`script.js:22`).
-- Neural background: `#network` canvas, ~55 nodes, links <145px opacity fade, rAF loop, lowered opacity 0.32 (`script.js:5-9`).
-- Scanlines overlay: fixed repeating-gradient 4px.
-- Ticker marquee: `@keyframes marquee` translateX -50%, 60s infinite, duplicated groups.
-- Visual animations: `@keyframes signal` (agriculture sensor pulse), `@keyframes bars` (sales chart), `.pulse` dot, `.blink` cursor.
-- Mobile menu: hamburger toggles `mobile-open`; resets ≥900px; Escape closes.
-- Accessibility: `prefers-reduced-motion: reduce` disables all animations/transitions (CSS override at `styles.css:33-40`); skip-link; focus-visible outlines; ARIA labels on menu/assistant.
+External runtime dependency:
+- Google Fonts via HTML `<link>` tags
 
-## 12. Important Existing Functionality (preserve)
+Other than that, the site runs entirely from static files.
 
-- Fixed navbar with scroll-spy active states and smooth scroll.
-- All present animations (ticker, signal, bars, tilt, magnetic, reveal, cursor glow, neural canvas).
-- Hero portrait with clipped blue-tinted frame (mobile back-layer behavior).
-- Project cards, both GitHub "View Repository" links (new tab), and both "View Project" PDF links (new tab).
-- AI assistant dialog: open/close, focus trap, Escape, rule-based answers.
-- CV download with Vercel attachment header.
-- Responsive layouts at 900px / 560px breakpoints.
-- Reduced-motion handling throughout.
-- "matrix" keyboard Easter egg.
-- `vercel.json` header rules and cleanUrls.
+# Implemented Features
 
-## 13. Recent Changes
+Confirmed implemented features:
+- Single-page portfolio layout
+- Fixed header navigation
+- Hero section with portrait and CTAs
+- Updated hero copy focused on practical AI/data/software problem solving
+- New process section describing the working approach
+- Work section with two project cards and clearer factual project summaries
+- About section with personal statement
+- Skills section with technical stack blocks
+- Timeline/education and experience section
+- AI Lab mock section
+- Contact links section with clearer internship/collaboration positioning
+- CV download button
+- AI helper modal with suggestions and prewritten answers
+- Animated network background
+- Scroll reveal effects
+- Mobile menu
+- Reduced-motion support
+- Contact/social links
 
-- 2026-09-21 — Confirmed root cause of "View Project links not visible": the LIVE Vercel deployment is STALE. `https://erick-pradhan-ai-portfolio.vercel.app` served the pre-change index.html (15,549 bytes; "View Project" NOT present; "View Repository" ×2 present), while the current local source (16,826 bytes) contains and RENDERS both links. A real-browser (headless Edge) computed-style check of both `.view-project` anchors returned `display:block, visibility:visible, opacity:1, color:rgb(196,204,213)`, `width:83px height:13px`, parent `display:flex`, overflow visible — i.e., visibly rendered. No code fix was required; the live site must be redeployed to serve the current files. No Vercel auth token exists on this machine, so deployment could not be performed here.
-- 2026-09-21 — Added "View Project ↗" PDF links to both project cards:
-  - `index.html:111` and `index.html:127` — new `<a class="view-project">` per card pointing at the existing project PDFs (`IoT%20Smart%20Agriculture%20System.pdf`, `Diwali%20Sales%20Data%20Analysis.pdf`) with `target="_blank" rel="noopener noreferrer"`; arrow wrapped in `<span>` for the hover nudge; "View Repository ↗" links left unchanged.
-  - `styles.css` (end of file) — scoped `.project-links a.view-project` rules: explicit visible baseline, smooth 0.25s transitions, hover brightens to `var(--blue2)` with blue glow, arrow moves right 4px.
-  - Result: both PDFs open in a new tab from their cards.
-- Initial audit + creation of PROJECT_STATE.md (this file). No source files modified.
+# In-Progress Features
 
-## 14. Verification
+The codebase shows signs of ongoing experimentation, but not a complete feature pipeline.
 
-Latest:
-- Build: NOT RUN (no build system)
-- Lint: NOT RUN (no lint config)
-- Tests: NOT RUN (no test framework)
-- Actually performed on 2026-09-21 (after View Project fix):
-  - Local HTTP server (Python, `127.0.0.1:8899`): `index.html` → 200 and serves both `<a class="view-project">` anchors with correct `%20` PDF hrefs; `IoT%20Smart%20Agriculture%20System.pdf` → 200 `application/pdf`; `Diwali%20Sales%20Data%20Analysis.pdf` → 200 `application/pdf`; `styles.css` → 200 `text/css`.
-  - Headless Edge render (`--headless=new --dump-dom`, virtual time): rendered DOM contains 2 `view-project` anchors + 4 total link texts ("View Project" ×2, "View Repository" ×2).
-  - Headless Edge computed-style check (throwaway copy, diagnostic script injected): both `.view-project` links report `visibility:visible`, `opacity:1`, `color:rgb(196,204,213)` (#c4ccd5), non-zero box (83×13px), parent `flex` with `overflow:visible` → verifiably rendered on screen by a real browser engine.
-  - CSS cascade audit: no `display:none`, `opacity:0`, `visibility:hidden`, or `pointer-events:none` rule matches `.project-links`/`.view-project`; base color `#c4ccd5` applies; CSS braces balanced (234/234).
-  - Live-site check: `https://erick-pradhan-ai-portfolio.vercel.app` → HTTP 200 but serves STALE index.html (15,549 bytes, no "View Project") → deployment is outdated, this is why the links are not on the live page yet.
-  - NOT performed: pixel-level screenshot inspection (this model cannot read images); interactive click simulation.
+Examples of likely in-progress or aspirational items:
+- The AI Lab section describes “exploring” capabilities such as LLM/RAG and AI automation.
+- These are styled as prototypes, not connected functionality.
+- The project cards are present but the content is static and not data-driven.
+- The assistant is rule-based instead of model-backed.
 
-## 15. Known Issues
+These should be treated as “conceptual or prototype-stage representations,” not production-ready AI systems.
 
-- `.chart-line` element in the sales visual (`index.html:119`) has no CSS rule (dead empty div) — cosmetic only, not visible.
-- Some unused legacy assets remain in root (`PortfolioImg*.png`, `audit-*.png`).
-- LIVE DEPLOYMENT IS STALE: `https://erick-pradhan-ai-portfolio.vercel.app` does not yet include the "View Project" links. Local source is correct and browser-renders them; the site needs to be redeployed (Vercel dashboard or `vercel --prod`).
-- No git repository initialized.
+# Known Bugs
 
-## 16. Planned Changes
+Confirmed or highly likely issues from static inspection:
+- `index.html` contains a `.chart-line` element in the sales visual that has no active CSS rule or styling in the inspected style file. This is harmless but indicates unfinished or dead cosmetic markup.
+- The project contains duplicate or legacy asset files (`PortfolioImg.png`, `PortfolioImg1.png`) that are not clearly used, increasing clutter.
+- The live Vercel deployment can fall behind the local source, which means the published site may not reflect current changes until redeployed.
+- There is no automated validation pipeline or browser test suite for this project.
 
-- None outstanding. The previously planned "View Project" PDF links for both project cards are now implemented. No other changes requested.
+Unverified items:
+- There may be visual polish issues not detectable from static file review alone.
+- There may be cross-browser behaviors not yet validated in a browser automation run.
 
-## 17. Source-of-Truth Files
+# Technical Debt
 
-- `index.html` — all sections, project cards, links, assistant markup
-- `styles.css` — design system, cards, keyframes, responsive
-- `script.js` — all interactions and AI assistant logic
-- `vercel.json` — hosting config and header rules
-- `README.md` — maintainer notes
-- This file (`PROJECT_STATE.md`) — persistent AI handoff snapshot
+The project is intentionally lightweight, but it still has some debt:
+- Hardcoded HTML content instead of structured data
+- Repeated markup patterns with no component separation
+- No automated tests or QA process
+- Lack of build tooling and CI/CD validation
+- One-off CSS and JS logic rather than modular organization
+- Legacy image files left in the root
+- Unused or incomplete visual elements
+- No production-readiness patterns for API or data handling (because there is no backend)
+
+This is not necessarily a bug, but it does limit maintainability as the portfolio grows.
+
+# Security Notes
+
+The project does not expose obvious secrets.
+
+What was checked:
+- No `.env` file found in the workspace root
+- No API keys or tokens were found in the inspected files
+- No backend secret handling was detected
+- No server-side credential logic was found
+
+Security considerations:
+- Static files are public by design
+- PDFs and image assets are directly served by the root; they may be discoverable by URL
+- `vercel.json` uses cache headers for a few assets, which is standard for static front-end hosting
+- External links are safe from the code perspective (`rel="noopener noreferrer"`)
+
+No sensitive information should be inferred from the project contents.
+
+# Verification Status
+
+Read-only audit status:
+- File structure reviewed: Yes
+- Core app files inspected: Yes (`index.html`, `styles.css`, `script.js`, `vercel.json`, `README.md`, `.gitignore`, `.vercel/project.json`)
+- Deployment configuration reviewed: Yes
+- Asset inventory reviewed: Yes
+- Static architecture understood: Yes
+- Runtime build/test execution: Not available / not applicable; no package.json or framework build step exists
+- Browser runtime validation: Not fully automated in this environment; the project is static and was audited by direct source review rather than a full test suite
+
+This means the audit is source-level and architecture-level, but not a full end-to-end automated verification run.
+
+# Recent Changes
+
+Recent work observed in the project state:
+- The project is currently a static portfolio with a custom AI assistant, animated visual treatment, and PDF project links.
+- The local project files have been reviewed and documented as the authoritative source for the portfolio structure.
+- The documentation file `PROJECT_STATE.md` has been updated to reflect the current state of the project.
+- 2026-09-21: revised hero copy to be more truthful and recruiter-facing; added a process section; expanded project descriptions with factual bullet points; clarified contact language without inventing new experience or projects.
+
+# Next Recommended Steps
+
+Recommended next steps, in order:
+1. Keep the project as a static portfolio unless a real framework migration is planned.
+2. Remove or archive unused legacy asset files to reduce clutter.
+3. Add a lightweight validation process if the project grows, even if it remains static.
+4. Decide whether the AI assistant should remain a static mock or be upgraded to a real backend-connected assistant.
+5. If the project is meant to be public-facing, ensure all current local changes are deployed to Vercel before sharing the site.
+6. Add a proper project status note if more portfolio items or case studies are added.
+7. Consider converting hardcoded project data to a structured data source when the portfolio becomes larger than a small static site.
+8. Add a minimal automated smoke check if a build/test workflow is introduced later.
+
+The current project is a functioning static portfolio, but it is intentionally simple and not yet a full application stack.

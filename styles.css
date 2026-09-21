@@ -176,8 +176,12 @@ main .contact-links strong { overflow-wrap: anywhere; }
   .hero-actions .btn { flex: 1 1 140px; }
 }
 
+.process{padding-top:110px}.process-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:30px}.process-card{border:1px solid var(--line);background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.012));padding:26px 22px;position:relative}.process-card span{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid rgba(116,194,255,.5);border-radius:50%;background:rgba(46,155,255,.08);color:var(--blue2);font:700 11px "Space Grotesk";letter-spacing:1px}.process-card h3{margin:18px 0 12px;font:700 26px/1.2 "Space Grotesk";letter-spacing:-.8px}.process-card p{margin:0;color:var(--muted);font-size:15px;line-height:1.7}.project-details{list-style:none;padding:0;margin:18px 0 20px;display:grid;gap:10px}.project-details li{position:relative;padding-left:18px;color:var(--muted);font-size:14px;line-height:1.65}.project-details li::before{content:"";position:absolute;left:0;top:10px;width:7px;height:7px;border-radius:50%;background:var(--blue);box-shadow:0 0 14px rgba(46,155,255,.45)}
+
 /* "View Project" PDF links: explicit visible baseline + subtle brighten/glow + arrow nudge. */
 .project-links a.view-project { display: inline-block; color: #c4ccd5; transition: color .25s ease, text-shadow .25s ease; }
 .project-links a.view-project span { display: inline-block; transition: transform .25s ease; }
 .project-links a.view-project:hover { color: var(--blue2); text-shadow: 0 0 14px rgba(46,155,255,.35); }
 .project-links a.view-project:hover span { transform: translateX(4px); }
+
+@media (max-width:900px){.process-grid{grid-template-columns:1fr}.process{padding-top:80px}}
