@@ -26,14 +26,17 @@ if(!motionQuery.matches){$$(".magnetic").forEach(b=>b.addEventListener("pointerm
 // Mobile menu
 const menuBtn=$("#menuBtn"),desktopNav=$("#desktopNav");
 function setMobileMenu(open){desktopNav.classList.toggle("mobile-open",open);menuBtn.setAttribute("aria-expanded",String(open));menuBtn.setAttribute("aria-label",open?"Close menu":"Open menu")}
-menuBtn.addEventListener("click",()=>setMobileMenu(!desktopNav.classList.contains("mobile-open")));
+function openMobileMenu(){setMobileMenu(true);const first=desktopNav.querySelector("a");if(first)first.focus({preventScroll:true})}
+function closeMobileMenu(returnFocus){if(!desktopNav.classList.contains("mobile-open"))return;setMobileMenu(false);if(returnFocus&&desktopNav.contains(document.activeElement))menuBtn.focus()}
+menuBtn.addEventListener("click",()=>{desktopNav.classList.contains("mobile-open")?setMobileMenu(false):openMobileMenu()});
 $$('#desktopNav a').forEach(link=>link.addEventListener("click",()=>setMobileMenu(false)));
 addEventListener("resize",()=>{if(innerWidth>=900)setMobileMenu(false)},{passive:true});
 
 // AI assistant
-const assistant=$("#assistant"),chat=$("#chat"),input=$("#chatInput");let lastFocusedElement;
-function openAI(){lastFocusedElement=document.activeElement;assistant.classList.add("open");assistant.setAttribute("aria-hidden","false");input.focus()}
-function closeAI(){const wasOpen=assistant.classList.contains("open");assistant.classList.remove("open");assistant.setAttribute("aria-hidden","true");if(wasOpen&&lastFocusedElement)lastFocusedElement.focus()}
+const assistant=$("#assistant"),chat=$("#chat"),input=$("#chatInput"),assistantTriggers=[$("#assistantFab"),$("#openAssistant")];let lastFocusedElement,assistantEpoch=0;
+function setAssistantState(open){assistant.classList.toggle("open",open);assistant.setAttribute("aria-hidden",String(!open));assistantTriggers.forEach(b=>{if(b)b.setAttribute("aria-expanded",String(open))})}
+function openAI(){assistantEpoch++;setAssistantState(true);lastFocusedElement=document.activeElement;input.focus()}
+function closeAI(){const wasOpen=assistant.classList.contains("open");assistantEpoch++;setAssistantState(false);if(wasOpen&&lastFocusedElement)lastFocusedElement.focus()}
 $("#assistantFab").onclick=openAI;$("#openAssistant").onclick=openAI;$("#closeAssistant").onclick=closeAI;
 const answers=[
 [/what does erick do|who is erick|about erick/,"Erick Pradhan is an AI/ML Engineer and a BSc (Hons) Computing with Artificial Intelligence student at Islington College, affiliated with London Metropolitan University. He works across machine learning, software engineering, cloud, data analysis, generative AI, automation, and IoT."],
@@ -47,10 +50,10 @@ const answers=[
 ];
 function appendMessage(message,role){const element=document.createElement("div");element.className=`msg ${role}`;element.textContent=message;chat.append(element);chat.scrollTop=chat.scrollHeight}
 function reply(q){q=q.toLowerCase();let a=answers.find(([r])=>r.test(q))?.[1]||"I can answer about Erick's projects, AI/ML skills, software stack, education, experiments, or contact information. Try asking: “What are his AI skills?”";appendMessage(a,"bot")}
-$("#chatForm").addEventListener("submit",e=>{e.preventDefault();let q=input.value.trim();if(!q)return;appendMessage(q,"user");input.value="";setTimeout(()=>reply(q),250)});
+$("#chatForm").addEventListener("submit",e=>{e.preventDefault();if(!assistant.classList.contains("open"))return;let q=input.value.trim();if(!q)return;appendMessage(q,"user");input.value="";const epoch=assistantEpoch;setTimeout(()=>{if(epoch!==assistantEpoch||!assistant.classList.contains("open"))return;reply(q)},250)});
 $$(".suggestions button").forEach(b=>b.onclick=()=>{input.value=b.dataset.q;$("#chatForm").dispatchEvent(new Event("submit",{cancelable:true}))});
 assistant.addEventListener("keydown",e=>{if(e.key!=="Tab")return;const focusable=[...assistant.querySelectorAll("button,input")];const first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}});
-addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(assistant.classList.contains("open"))closeAI();else setMobileMenu(false)});
+addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(assistant.classList.contains("open"))closeAI();else closeMobileMenu(true)});
 
 // Small keyboard Easter egg: type "matrix"
 let key="";addEventListener("keydown",e=>{key=(key+e.key.toLowerCase()).slice(-6);if(key==="matrix"){document.body.style.setProperty("--blue","#55ff88");setTimeout(()=>document.body.style.setProperty("--blue","#2e9bff"),3000)}});

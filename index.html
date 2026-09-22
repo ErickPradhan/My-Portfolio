@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
   <meta charset="UTF-8">
+  <script>document.documentElement.classList.replace("no-js","js")</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#05070a">
   <meta name="description" content="Erick Pradhan — AI/ML Engineer building intelligent, scalable solutions with machine learning, data, and software engineering.">
@@ -10,21 +11,22 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="Erick Pradhan — AI/ML Engineer">
   <meta property="og:description" content="Erick Pradhan — AI/ML Engineer building intelligent, scalable solutions with machine learning, data, and software engineering.">
-  <meta property="og:image" content="Porfolio.jpg">
-  <meta property="og:url" content="https://github.com/ErickPradhan">
+  <meta property="og:image" content="https://erickpradhan.com.np/assets/images/Porfolio.jpg">
+  <meta property="og:url" content="https://erickpradhan.com.np/">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Erick Pradhan — AI/ML Engineer">
   <meta name="twitter:description" content="AI/ML Engineer building intelligent, scalable solutions with machine learning, data, and software engineering.">
-  <meta name="twitter:image" content="Porfolio.jpg">
+  <meta name="twitter:image" content="https://erickpradhan.com.np/assets/images/Porfolio.jpg">
   <title>Erick Pradhan — AI/ML Engineer</title>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://erickpradhan.com.np/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"></noscript>
   <link rel="stylesheet" href="styles.css">
   <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"Person","name":"Erick Pradhan","jobTitle":"AI/ML Engineer","email":"mailto:erickpradhan2@gmail.com","sameAs":["https://github.com/ErickPradhan","https://www.linkedin.com/in/erick-pradhan-6a879521b/","https://www.youtube.com/@DevBy-x8e"]}
+    {"@context":"https://schema.org","@type":"Person","name":"Erick Pradhan","url":"https://erickpradhan.com.np/","image":"https://erickpradhan.com.np/assets/images/Porfolio.jpg","jobTitle":"AI/ML Engineer","email":"mailto:erickpradhan2@gmail.com","sameAs":["https://github.com/ErickPradhan","https://www.linkedin.com/in/erick-pradhan-6a879521b/","https://www.youtube.com/@DevBy-x8e"]}
   </script>
 </head>
 <body>
@@ -42,7 +44,7 @@
       <a href="#lab">AI Lab</a>
       <a href="#contact">Contact</a>
     </nav>
-    <button class="nav-ai" id="openAssistant">Ask AI <span>↗</span></button>
+    <button class="nav-ai" id="openAssistant" aria-haspopup="dialog" aria-controls="assistant" aria-expanded="false">Ask Erick <span>↗</span></button>
     <button class="menu" id="menuBtn" type="button" aria-label="Open menu" aria-controls="desktopNav" aria-expanded="false">☰</button>
   </header>
 
@@ -65,11 +67,11 @@
       </div>
       <div class="hero-portrait reveal">
         <div class="portrait-frame">
-          <img src="Porfolio.jpg" alt="Erick Pradhan" width="1080" height="1440" fetchpriority="high" decoding="async">
+          <img src="assets/images/Porfolio.jpg" alt="Erick Pradhan" width="1080" height="1440" fetchpriority="high" decoding="async">
         </div>
         <blockquote class="portrait-quote">
-          <span>“That's what she said!”</span>
-          <cite>— Michael Scott</cite>
+          <span>“Talk is cheap. Show me the code.”</span>
+          <cite>— Linus Torvalds</cite>
         </blockquote>
       </div>
       <div class="scroll-cue">SCROLL TO EXPLORE <span>↓</span></div>
@@ -128,16 +130,24 @@
             <div class="signal"></div>
           </div>
           <div class="project-body">
-            <div class="tag">IoT · SMART AGRICULTURE</div>
+            <div class="tag">IOT · SMART AGRICULTURE</div>
             <h2>IoT Smart Agriculture</h2>
-            <p>An IoT-based smart agriculture system using Raspberry Pi and Arduino Uno to monitor soil moisture and environmental conditions in real time. It combines sensor data collection, monitoring, and automated irrigation to support water-efficient crop management.</p>
+            <p>An end-to-end IoT agriculture system that monitors soil moisture, temperature, humidity, and water-tank level in real time, and automatically triggers irrigation when the soil turns dry.</p>
             <ul class="project-details">
-              <li>Monitors soil moisture and environmental conditions</li>
-              <li>Uses Raspberry Pi and Arduino Uno for system coordination</li>
-              <li>Supports practical irrigation decisions in a field environment</li>
+              <li>Monitors soil moisture, temperature, humidity, and water-tank level with real hardware sensors</li>
+              <li>Automates irrigation through a relay-controlled water pump when moisture is low</li>
+              <li>Alerts on high humidity / low moisture (buzzer) and low water level (Blynk notification)</li>
             </ul>
-            <div class="techs"><span>Python</span><span>Arduino Uno</span><span>Raspberry Pi</span><span>IoT</span></div>
-            <div class="project-links"><a class="view-project" href="IoT%20Smart%20Agriculture%20System.pdf" target="_blank" rel="noopener noreferrer">View Project <span>↗</span></a><a href="https://github.com/ErickPradhan/Iot-Smart-Agricultural-System" target="_blank" rel="noopener noreferrer">View Repository ↗</a></div>
+            <div class="techs"><span>ESP32</span><span>Arduino IDE</span><span>DHT11</span><span>HC-SR04</span><span>Soil Moisture</span><span>Blynk</span><span>IoT</span></div>
+            <details class="project-more">
+              <summary>Implementation &amp; verification <span class="plus">+</span></summary>
+              <div class="more-body">
+                <div class="more-block"><b>Problem</b><p>Manual irrigation wastes water and gives farmers no real-time visibility into field conditions such as soil moisture or water-tank levels.</p></div>
+                <div class="more-block"><b>What was built</b><p>ESP32 firmware written in the Arduino IDE, wired to a DHT11, an HC-SR04 ultrasonic sensor, a soil moisture sensor, an I2C LCD, a buzzer, and a 5V relay + mini water pump. The Blynk IoT platform provides remote monitoring and alerts.</p></div>
+                <div class="more-block"><b>Verification</b><p>Documented in the project report: six build-and-verification phases — sensor readings, LCD output, relay-driven pump switching, and a Blynk low-water notification all functioned as intended (the report notes the ESP32 occasionally needed a reboot during extended testing).</p></div>
+              </div>
+            </details>
+            <div class="project-links"><a class="view-project" href="assets/documents/IoT%20Smart%20Agriculture%20System.pdf" target="_blank" rel="noopener noreferrer">Project document <span>↗</span></a><a href="https://github.com/ErickPradhan/Iot-Smart-Agricultural-System" target="_blank" rel="noopener noreferrer">View Repository ↗</a></div>
           </div>
         </article>
 
@@ -151,14 +161,22 @@
           <div class="project-body">
             <div class="tag">DATA ANALYSIS · PYTHON</div>
             <h2>Diwali Sales Data Analysis</h2>
-            <p>An end-to-end exploratory analysis of Diwali sales data that identifies customer behaviour, demographic trends, product preferences, and regional sales patterns. The work includes cleaning, feature engineering, statistical testing, and visualisations.</p>
+            <p>End-to-end exploratory data analysis on 11,251 Diwali sales transactions to uncover customer behaviour, demographic trends, and regional patterns — from data cleaning to statistical testing.</p>
             <ul class="project-details">
-              <li>Explores customer and sales trends across product and demographic segments</li>
-              <li>Applies Python data analysis workflows with pandas and visualisation tools</li>
-              <li>Supports actionable business recommendations from the data</li>
+              <li>Cleans and engineers the dataset — missing values, duplicates, ordinal age groups, and spend tiers</li>
+              <li>Explores gender, age, state, product category, and zone trends with a suite of visualisations</li>
+              <li>Validates findings statistically — ANOVA and Chi-square hypothesis testing</li>
             </ul>
-            <div class="techs"><span>Python</span><span>Pandas</span><span>NumPy</span><span>Matplotlib</span><span>SciPy</span></div>
-            <div class="project-links"><a class="view-project" href="Diwali%20Sales%20Data%20Analysis.pdf" target="_blank" rel="noopener noreferrer">View Project <span>↗</span></a><a href="https://github.com/ErickPradhan/DiwaliSales-DataAnalysis" target="_blank" rel="noopener noreferrer">View Repository ↗</a></div>
+            <div class="techs"><span>Python</span><span>Pandas</span><span>NumPy</span><span>Matplotlib</span><span>SciPy</span><span>Jupyter Notebook</span></div>
+            <details class="project-more">
+              <summary>Implementation &amp; results <span class="plus">+</span></summary>
+              <div class="more-body">
+                <div class="more-block"><b>Problem</b><p>Raw retail transaction data is hard to act on — without analysis, businesses miss customer segments, regional demand, and product trends.</p></div>
+                <div class="more-block"><b>What was built</b><p>A Python data pipeline: pandas import and cleaning (missing values, duplicates, irrelevant columns), feature engineering (ordered age groups, purchase-value tiers), correlation / skewness / kurtosis analysis, and grouped visualisations for demographics, states, and product categories.</p></div>
+                <div class="more-block"><b>Key results</b><p>ANOVA shows purchase amount differs significantly by occupation (F = 2.477, p = 0.00166); Chi-square confirms a product-category–zone association (χ² = 1634.97, p ≈ 1.45 × 10⁻²⁹⁶). Findings: female customers drive higher sales, the adult age group spends most, and sales concentrate in Uttar Pradesh, Maharashtra, and Karnataka — led by clothing, food, and electronics.</p></div>
+              </div>
+            </details>
+            <div class="project-links"><a class="view-project" href="assets/documents/Diwali%20Sales%20Data%20Analysis.pdf" target="_blank" rel="noopener noreferrer">Project document <span>↗</span></a><a href="https://github.com/ErickPradhan/DiwaliSales-DataAnalysis" target="_blank" rel="noopener noreferrer">View Repository ↗</a></div>
           </div>
         </article>
 
@@ -181,15 +199,16 @@
       <div class="section-head reveal"><div><span class="section-no">03</span><span class="eyebrow">TECHNICAL STACK</span></div><p>A growing toolkit for intelligent, connected software.</p></div>
       <div class="skill-wall reveal">
         <div class="skill-cluster"><h3>AI / ML</h3><span>Machine Learning</span><span>Generative AI</span><span>LLM APIs</span><span>AI Automation</span><span>Data Analysis</span></div>
-        <div class="skill-cluster"><h3>Engineering</h3><span>Python</span><span>Java</span><span>JavaScript</span><span>SQL</span><span>REST APIs</span><span>React.js</span><span>Node.js</span></div>
+        <div class="skill-cluster"><h3>Engineering</h3><span>Python</span><span>Java</span><span>JavaScript</span><span>SQL</span><span>REST APIs</span><span>React.js</span><span>Node.js</span><span>HTML / CSS</span></div>
         <div class="skill-cluster"><h3>Data / Cloud</h3><span>MySQL</span><span>MongoDB</span><span>Supabase</span><span>DynamoDB</span><span>AWS</span><span>Docker</span></div>
         <div class="skill-cluster"><h3>Systems</h3><span>Git / GitHub</span><span>Linux / WSL</span><span>Raspberry Pi</span><span>Arduino Uno</span><span>IoT</span></div>
       </div>
       <div class="skill-meter reveal">
-        <div><span>AI / ML</span><i><b style="width:88%"></b></i><small>FOCUS</small></div>
-        <div><span>Software Engineering</span><i><b style="width:84%"></b></i><small>BUILDING</small></div>
-        <div><span>Cloud & Systems</span><i><b style="width:72%"></b></i><small>GROWING</small></div>
+        <div><span>AI / ML</span><i><b class="lv1"></b></i><small>FOCUS</small></div>
+        <div><span>Software Engineering</span><i><b class="lv2"></b></i><small>BUILDING</small></div>
+        <div><span>Cloud & Systems</span><i><b class="lv3"></b></i><small>GROWING</small></div>
       </div>
+      <p class="meter-note">Self-assessed focus areas within my current toolkit — not benchmarked scores.</p>
     </section>
 
     <section class="section timeline">
@@ -207,7 +226,7 @@
         <div class="console-bar"><span></span><span></span><span></span><b>erick@ai-lab:~</b></div>
         <div class="console-content">
           <div class="terminal-line"><span>$</span> system.scan()</div>
-          <div class="terminal-line result">→ 4 active research slots detected</div>
+          <div class="terminal-line result">→ 4 research slots in progress</div>
           <div class="lab-grid">
             <div><b>01</b><strong>LLM / RAG</strong><span>Knowledge systems</span><em>EXPLORING</em></div>
             <div><b>02</b><strong>AI AUTOMATION</strong><span>Agentic workflows</span><em>EXPLORING</em></div>
@@ -222,7 +241,7 @@
     <section class="section cv">
       <div class="cv-card reveal">
         <div><span class="eyebrow">06 / CV</span><h2>Want the full<br><em>technical profile?</em></h2><p>Download the latest CV for education, projects, technical skills, certifications, and experience.</p></div>
-          <a class="btn primary magnetic" href="Erick_Pradhan.pdf" download>Download CV ↓</a>
+          <a class="btn primary magnetic" href="assets/documents/Erick_Pradhan.pdf" download>Download CV ↓</a>
       </div>
     </section>
 
@@ -240,12 +259,13 @@
     </section>
   </main>
 
-  <button class="assistant-fab" id="assistantFab" aria-label="Open AI assistant"><span>✦</span> Ask Erick AI</button>
+  <button class="assistant-fab" id="assistantFab" aria-label="Open portfolio assistant" aria-haspopup="dialog" aria-controls="assistant" aria-expanded="false"><span>✦</span> Ask Erick</button>
   <div class="assistant" id="assistant" role="dialog" aria-modal="true" aria-labelledby="assistantTitle" aria-hidden="true">
-    <div class="assistant-head"><div id="assistantTitle"><span class="pulse"></span> ERICK AI</div><button id="closeAssistant" type="button" aria-label="Close assistant">×</button></div>
-    <div class="assistant-body" id="chat" aria-live="polite"><div class="msg bot">Hi. I'm the portfolio assistant. Ask me about Erick's skills, education, projects, experience, or tech stack.</div></div>
+    <div class="assistant-head"><div id="assistantTitle"><span class="pulse"></span> PORTFOLIO ASSISTANT</div><button id="closeAssistant" type="button" aria-label="Close assistant">×</button></div>
+    <div class="assistant-body" id="chat" aria-live="polite"><div class="msg bot">Hi, I'm Erick's portfolio assistant — a curated guide built into this page (no external AI). Ask me about his projects, AI/ML and software skills, education, experience, or tech stack.</div></div>
     <div class="suggestions"><button type="button" data-q="What does Erick do?">What does he do?</button><button type="button" data-q="What are his AI skills?">AI skills</button><button type="button" data-q="Tell me about his projects">Projects</button></div>
-    <form id="chatForm"><input id="chatInput" placeholder="Ask about Erick..." autocomplete="off" maxlength="300" aria-label="Ask Erick AI a question"><button type="submit" aria-label="Send question">↗</button></form>
+    <p class="assistant-note">Rule-based page helper · not connected to an external AI service.</p>
+    <form id="chatForm"><input id="chatInput" placeholder="Ask about Erick..." autocomplete="off" maxlength="300" aria-label="Ask Erick a question"><button type="submit" aria-label="Send question">↗</button></form>
   </div>
 
   <footer><span>ERICK PRADHAN</span><span>AI / ML ENGINEER</span><span>BUILT WITH CURIOSITY + CODE</span></footer>

@@ -1,384 +1,222 @@
-# Project Overview
-
-This project is a single-page portfolio website for Erick Pradhan, positioned as an AI/ML engineer and computing student. It is implemented as a static, front-end-only site with no framework, package manager, backend, or build pipeline. The experience is intentionally designed as a dark, futuristic portfolio with animated sections, a custom neural background canvas, project cards, and a rule-based AI assistant chat modal.
-
-The site is built to be lightweight, portable, and deployable on Vercel static hosting with no code generation or server runtime. The repository currently contains a small root-level structure with HTML, CSS, JavaScript, PDFs, and image assets only.
-
-# Current Architecture
-
-The application is a single-page portfolio with all primary content embedded in the root-level HTML file rather than split into components or routes. There is no client-side routing system, no React/Vue/etc. codebase, and no backend or API layer.
-
-The architecture follows a classic static HTML/CSS/JS pattern:
-- `index.html` contains the complete page structure and UI content.
-- `styles.css` contains the full design system, page layout, responsive rules, and animations.
-- `script.js` contains all interactive behaviors such as canvas animation, scroll reveal, nav highlighting, mobile menu, magnetic hover effects, and the AI assistant rules engine.
-- Static media files such as PDFs and images are served directly from the root and referenced by relative paths.
-- Deployment is handled by `vercel.json` and Vercel static hosting configuration.
-
-This is a static portfolio architecture, not a multi-page app or a framework-driven application.
-
-# Technology Stack
-
-Verified items from the codebase:
-- HTML5
-- CSS3
-- Vanilla JavaScript
-- Google Fonts (Inter and Space Grotesk)
-- Vercel static hosting
-- No package.json present
-- No npm install dependencies present
-- No framework detected (`React`, `Next.js`, `Vue`, `Angular`, etc.)
-- No build tool detected (`Vite`, `Webpack`, `Parcel`, etc.)
-- No TypeScript configuration detected
-- No backend framework detected
-- No database or server-side runtime detected
-
-Unverified or not present:
-- No authenticated API integration observed in source
-- No external AI model integration observed; the assistant is local rule-based JavaScript logic only
-- No environment variables file was found in the project root
-
-# File/Folder Map
-
-Project root: `c:\Users\lenovo legion\Downloads\My Porfolio\erick-pradhan-ai-portfolio`
-
-Important files and folders:
-- `index.html` — complete page markup and section content
-- `styles.css` — all styling, design tokens, responsive rules, animations
-- `script.js` — interactions and assistant logic
-- `README.md` — project usage and maintenance guidance
-- `PROJECT_STATE.md` — current project snapshot / source of truth
-- `vercel.json` — Vercel deployment settings and static asset headers
-- `.gitignore` — excludes `.vercel` metadata from Git
-- `.vercel/project.json` — Vercel project metadata
-- `favicon.svg` — site favicon
-- `Porfolio.jpg` — portfolio hero image used in the main layout
-- `Porfolio.png` — source image for the portrait
-- `PortfolioImg.png` — legacy/duplicate image asset
-- `PortfolioImg1.png` — legacy/duplicate image asset
-- `Erick_Pradhan.pdf` — CV PDF
-- `IoT Smart Agriculture System.pdf` — project PDF
-- `Diwali Sales Data Analysis.pdf` — project PDF
-- `audit-desktop.png` and `audit-desktop-final.png` — likely audit screenshots; not referenced by the app
-
-Notable absence:
-- There is no `src/` directory
-- There is no `public/` directory
-- There is no `components/` directory
-- There is no `package.json`
-- There is no `node_modules`
-- There is no `.env` file or environment config file with secrets
-
-# Important Components
-
-The page is not composed from reusable framework components; instead, it uses distinct sections and repeated inline blocks defined directly in `index.html`.
-
-Important sections in `index.html`:
-- Header navigation and brand
-- Hero section with portrait and calls to action
-- Ticker marquee
-- Process section explaining how work is approached
-- Work/projects section
-- About section
-- Skills section
-- Journey/timeline section
-- AI Lab mock terminal section
-- CV section
-- Contact section
-- AI assistant chat modal
-- Footer
-
-Notable behaviors defined in `script.js`:
-- Canvas-based animated network background
-- Reveal-on-scroll effect using `IntersectionObserver`
-- Scroll spy highlighting for nav links
-- Mobile navigation toggle
-- Magnetic hover effect on buttons
-- 3D tilt effect for project cards
-- AI assistant open/close + suggestion buttons
-- Keyboard focus-management within the assistant dialog
-- Easter egg triggered by typing the key sequence "matrix"
-
-# Routes and Navigation
-
-This project uses a single-page structure and anchor-based navigation only.
-
-Internal anchors in `index.html`:
-- `#work`
-- `#about`
-- `#skills`
-- `#lab`
-- `#contact`
-
-These are linked through the top navigation and appear as smooth-scroll jumps via CSS. There are no route files, no route config, and no router library.
-
-External links include:
-- GitHub
-- LinkedIn
-- YouTube
-- Project repositories
-- PDF downloads
-
-All external links open in a new tab using `target="_blank"` and `rel="noopener noreferrer"` when present.
-
-# Data Flow
-
-Data flow is minimal and entirely front-end driven:
-- Content is directly embedded in `index.html`.
-- Styling is static in `styles.css`.
-- Interactions are logic-driven in `script.js`.
-- The AI assistant does not call an external API; it uses a local `answers` array and regex matching in JavaScript.
-- No fetch, axios, GraphQL, or REST calls were found in the inspected source.
-- No backend nor database layer is present.
-- No state management library is in use.
-
-This means the site is effectively a static content presentation layer with client-side effects only.
-
-# APIs and Integrations
-
-No backend API integration is found in the project source.
-
-Observed integrations:
-- Google Fonts CDN for typography
-- Vercel static hosting configuration
-- External social/profile links
-- PDF assets served directly from the root
-
-Not observed:
-- No Firebase integration
-- No Supabase integration
-- No CMS integration
-- No analytics SDK
-- No payment integration
-- No user auth system
-
-The AI assistant is not connected to an LLM or server endpoint; it is a rule-based local helper.
-
-# AI/ML Functionality
-
-The site presents itself as an AI/ML engineer portfolio, but the actual AI functionality present is limited and local.
-
-Verified AI-related behavior:
-- A floating “Ask AI”/“Ask Erick AI” assistant appears in the interface.
-- It is implemented in `script.js` using a static array of question patterns and matching answers.
-- It recognizes user input via regular expressions and responds with prewritten responses.
-- It includes a few suggested prompts and a chat UI.
-
-What is not present:
-- No model inference runtime
-- No OpenAI/Anthropic/Gemini API key usage
-- No external AI service call
-- No vector database or RAG workflow
-- No custom ML model deployment
-
-Therefore this project can be described as “portfolio branding plus a front-end AI assistant mockup,” not a real AI product backend.
-
-# Design System
-
-The overall aesthetic is a dark, futuristic, cyber-tech look.
-
-Design tokens in `styles.css`:
-- `--bg`: near-black background
-- `--panel`: dark gray panels
-- `--text`: light text
-- `--muted`: gray text
-- `--line`: faint border color
-- `--blue` / `--blue2`: primary accent colors
-- `--max`: max content width
-
-Observed styling patterns:
-- High contrast dark surfaces
-- Blue accent glow and neon-like hover states
-- Lowercase and uppercase label styling with letter spacing
-- Sharp corners with subtle glassmorphism via translucent panels
-- Strong typography hierarchy using Space Grotesk and Inter
-- Responsive layout based on standard breakpoints and CSS grid/flexbox
-
-# Animations and Interactions
-
-The project uses CSS and JavaScript for light motion layering.
-
-Observed animations:
-- Network background canvas animation
-- Reveal-on-scroll animations for sections
-- Magnetic button movement
-- 3D tilt on project cards
-- Marquee ticker loop
-- Sensor pulse animation in the IoT-themed project visual
-- Animated sales chart bars
-- Cursor glow following pointer movement
-- Focus ring accessibility outlines
-- Matrix easter egg color override
-
-Motion behavior is reduced for users who prefer reduced motion via `prefers-reduced-motion` checks.
-
-# Projects/Cards/Links
-
-The portfolio includes two primary project cards in `index.html`.
-
-Project 1: IoT Smart Agriculture
-- File reference: `index.html`
-- Summary: sensor-driven smart agriculture monitoring with Raspberry Pi and Arduino Uno
-- Technologies: Python, Arduino Uno, Raspberry Pi, IoT
-- Project PDF: `IoT Smart Agriculture System.pdf`
-- Repository: external GitHub link
-- Current link pattern: `View Project` and `View Repository`
-
-Project 2: Diwali Sales Data Analysis
-- File reference: `index.html`
-- Summary: sales analysis with Python-based data cleaning and exploratory analysis
-- Technologies: Python, Pandas, NumPy, Matplotlib, SciPy
-- Project PDF: `Diwali Sales Data Analysis.pdf`
-- Repository: external GitHub link
-- Current link pattern: `View Project` and `View Repository`
-
-Important note:
-- No project data is abstracted into a JSON file or CMS; the cards are hardcoded directly in the HTML.
-- The project visuals are CSS-based illustrations rather than imported asset images.
-
-# Assets
-
-Important asset files at the root:
-- `Porfolio.jpg` — primary portrait image used in hero section
-- `Porfolio.png` — original portrait source
-- `Erick_Pradhan.pdf` — resume/cv
-- `IoT Smart Agriculture System.pdf` — IoT project PDF
-- `Diwali Sales Data Analysis.pdf` — sales analysis PDF
-- `favicon.svg` — site favicon
-
-Legacy or unused-looking assets:
-- `PortfolioImg.png`
-- `PortfolioImg1.png`
-- `audit-desktop.png`
-- `audit-desktop-final.png`
-
-These are not clearly referenced in the main page logic and appear to be leftover or support files rather than currently active app assets.
-
-# Dependencies
-
-The project does not include dependency management or package installation steps.
-
-Current dependency state:
-- No `package.json`
-- No `package-lock.json`
-- No `node_modules`
-- No npm dependencies
-- No framework lockfile
-
-External runtime dependency:
-- Google Fonts via HTML `<link>` tags
-
-Other than that, the site runs entirely from static files.
-
-# Implemented Features
-
-Confirmed implemented features:
-- Single-page portfolio layout
-- Fixed header navigation
-- Hero section with portrait and CTAs
-- Updated hero copy focused on practical AI/data/software problem solving
-- New process section describing the working approach
-- Work section with two project cards and clearer factual project summaries
-- About section with personal statement
-- Skills section with technical stack blocks
-- Timeline/education and experience section
-- AI Lab mock section
-- Contact links section with clearer internship/collaboration positioning
-- CV download button
-- AI helper modal with suggestions and prewritten answers
-- Animated network background
-- Scroll reveal effects
-- Mobile menu
-- Reduced-motion support
-- Contact/social links
-
-# In-Progress Features
-
-The codebase shows signs of ongoing experimentation, but not a complete feature pipeline.
-
-Examples of likely in-progress or aspirational items:
-- The AI Lab section describes “exploring” capabilities such as LLM/RAG and AI automation.
-- These are styled as prototypes, not connected functionality.
-- The project cards are present but the content is static and not data-driven.
-- The assistant is rule-based instead of model-backed.
-
-These should be treated as “conceptual or prototype-stage representations,” not production-ready AI systems.
-
-# Known Bugs
-
-Confirmed or highly likely issues from static inspection:
-- `index.html` contains a `.chart-line` element in the sales visual that has no active CSS rule or styling in the inspected style file. This is harmless but indicates unfinished or dead cosmetic markup.
-- The project contains duplicate or legacy asset files (`PortfolioImg.png`, `PortfolioImg1.png`) that are not clearly used, increasing clutter.
-- The live Vercel deployment can fall behind the local source, which means the published site may not reflect current changes until redeployed.
-- There is no automated validation pipeline or browser test suite for this project.
-
-Unverified items:
-- There may be visual polish issues not detectable from static file review alone.
-- There may be cross-browser behaviors not yet validated in a browser automation run.
-
-# Technical Debt
-
-The project is intentionally lightweight, but it still has some debt:
-- Hardcoded HTML content instead of structured data
-- Repeated markup patterns with no component separation
-- No automated tests or QA process
-- Lack of build tooling and CI/CD validation
-- One-off CSS and JS logic rather than modular organization
-- Legacy image files left in the root
-- Unused or incomplete visual elements
-- No production-readiness patterns for API or data handling (because there is no backend)
-
-This is not necessarily a bug, but it does limit maintainability as the portfolio grows.
-
-# Security Notes
-
-The project does not expose obvious secrets.
-
-What was checked:
-- No `.env` file found in the workspace root
-- No API keys or tokens were found in the inspected files
-- No backend secret handling was detected
-- No server-side credential logic was found
-
-Security considerations:
-- Static files are public by design
-- PDFs and image assets are directly served by the root; they may be discoverable by URL
-- `vercel.json` uses cache headers for a few assets, which is standard for static front-end hosting
-- External links are safe from the code perspective (`rel="noopener noreferrer"`)
-
-No sensitive information should be inferred from the project contents.
-
-# Verification Status
-
-Read-only audit status:
-- File structure reviewed: Yes
-- Core app files inspected: Yes (`index.html`, `styles.css`, `script.js`, `vercel.json`, `README.md`, `.gitignore`, `.vercel/project.json`)
-- Deployment configuration reviewed: Yes
-- Asset inventory reviewed: Yes
-- Static architecture understood: Yes
-- Runtime build/test execution: Not available / not applicable; no package.json or framework build step exists
-- Browser runtime validation: Not fully automated in this environment; the project is static and was audited by direct source review rather than a full test suite
-
-This means the audit is source-level and architecture-level, but not a full end-to-end automated verification run.
-
-# Recent Changes
-
-Recent work observed in the project state:
-- The project is currently a static portfolio with a custom AI assistant, animated visual treatment, and PDF project links.
-- The local project files have been reviewed and documented as the authoritative source for the portfolio structure.
-- The documentation file `PROJECT_STATE.md` has been updated to reflect the current state of the project.
-- 2026-09-21: revised hero copy to be more truthful and recruiter-facing; added a process section; expanded project descriptions with factual bullet points; clarified contact language without inventing new experience or projects.
-
-# Next Recommended Steps
-
-Recommended next steps, in order:
-1. Keep the project as a static portfolio unless a real framework migration is planned.
-2. Remove or archive unused legacy asset files to reduce clutter.
-3. Add a lightweight validation process if the project grows, even if it remains static.
-4. Decide whether the AI assistant should remain a static mock or be upgraded to a real backend-connected assistant.
-5. If the project is meant to be public-facing, ensure all current local changes are deployed to Vercel before sharing the site.
-6. Add a proper project status note if more portfolio items or case studies are added.
-7. Consider converting hardcoded project data to a structured data source when the portfolio becomes larger than a small static site.
-8. Add a minimal automated smoke check if a build/test workflow is introduced later.
-
-The current project is a functioning static portfolio, but it is intentionally simple and not yet a full application stack.
+# PROJECT_STATE.md — Erick Pradhan Portfolio (source of truth)
+
+Updated: 2026-09-22
+
+## What this project is
+
+A single-page static portfolio for Erick Pradhan, positioned as an AI/ML Engineer and BSc (Hons) Computing with Artificial Intelligence student. Dark, futuristic, AI/engineering aesthetic. Plain HTML + CSS + vanilla JavaScript — no framework, no package manager, no build step, no backend.
+
+Live domain: **https://erickpradhan.com.np**
+
+## Current architecture
+
+- `index.html` — complete page markup and all section content (single page, anchor navigation).
+- `styles.css` — full design system, layout, responsive rules, animations.
+- `script.js` — all interactions (network background canvas, scroll reveal, nav scroll-spy, mobile menu, magnetic/tilt effects, rule-based assistant, "matrix" easter egg).
+- Static assets served from `assets/` by relative path.
+- No routing, no components, no build, no server, no API calls (except nothing — the assistant is fully local).
+
+## Hosting & domain
+
+- **Host:** GitHub Pages, serving the repository root as a static site.
+- **DNS:** Cloudflare, custom domain `erickpradhan.com.np` mapped to the Pages site.
+- Repository: `ErickPradhan/My-Portfolio` (branch `main`).
+- `CNAME` at repo root contains the apex domain `erickpradhan.com.np` (required by GitHub Pages for custom-domain serving).
+- **Vercel is no longer used for hosting.** The obsolete `vercel.json` and the `.vercel/` metadata folders were removed in this update, and all canonical/Open Graph URLs point to the apex domain. No `vercel.app` / `vercel.com` URLs exist anywhere in the site code.
+
+## File/folder map
+
+Project root: `erick-pradhan-ai-portfolio/` inside the working copy.
+
+```
+index.html
+styles.css
+script.js
+README.md
+PROJECT_STATE.md        (this file)
+CNAME                   github pages custom domain (erickpradhan.com.np)
+robots.txt              crawl rules -> apex sitemap
+sitemap.xml             single-URL sitemap -> https://erickpradhan.com.np/
+.gitignore              minimal (ignores .vercel, node_modules, .DS_Store)
+assets/
+  images/
+    Porfolio.jpg        hero portrait (1080x1440, ~187 KB), src + og:image
+    favicon.svg         site favicon
+  documents/
+    Erick_Pradhan.pdf   CV (linked as Download CV)
+    IoT Smart Agriculture System.pdf   project document
+    Diwali Sales Data Analysis.pdf     project document
+  reference/
+    Porfolio.png        master portrait source image (not referenced)
+    PortfolioImg.png    legacy/duplicate image (not referenced)
+    PortfolioImg1.png   legacy/duplicate image (not referenced)
+    audit-desktop.png   old audit screenshot (not referenced)
+    audit-desktop-final.png  old audit screenshot (not referenced)
+```
+
+Notable absences (intentional): no `src/`, no `public/`, no `components/`, no `package.json`, no `node_modules`, no `.env`, no `vercel.json`, no `.vercel/`.
+
+## Section inventory (index.html)
+
+1. Header / nav (`#main-content`, `#work`, `#about`, `#skills`, `#lab`, `#contact`) + "Ask Erick" button + mobile menu.
+2. Hero — portrait, name (`Erick Pradhan`), positioning line, two CTAs (Explore Work→#work, Connect→#contact), eyebrow "AI / ML ENGINEER · OPEN TO INTERNSHIPS". Portrait quote is Linus Torvalds: "Talk is cheap. Show me the code."
+3. Ticker marquee — AI/ML/software/cloud/data/IoT phrase loop.
+4. Process — "HOW I BUILD" three cards (problem-first thinking, AI and data, systems that work).
+5. Work/projects — `SELECTED SYSTEMS`, two project cards (see below).
+6. About — BSc at Islington College (London Met affiliate), build-first/learn-deep/ship-clean facts.
+7. Skills — 4 clusters + self-assessed meter.
+8. Timeline/journey — education, tutor experience, AWS Academy certifications.
+9. AI Lab — decorative terminal; research slots explicitly labeled EXPLORING / QUEUED (prototypes, not products).
+10. CV — download card linking `assets/documents/Erick_Pradhan.pdf`.
+11. Contact — email / GitHub / LinkedIn / YouTube external links.
+12. Assistant panel — "PORTFOLIO ASSISTANT" dialog.
+13. Footer.
+
+## Project cards & shown-work behavior
+
+Two cards, hardcoded in HTML (not data-driven). Each card has: a CSS illustration visual, tag, title, 2-line summary, 3 bullet points, technology chips, an expandable `<details>` block ("Implementation & verification" / "Implementation & results"), and two links (Project document PDF + View Repository, both `target="_blank" rel="noopener noreferrer"`).
+
+**Project 1 — IoT Smart Agriculture** (`assets/documents/IoT Smart Agriculture System.pdf`, repo `ErickPradhan/Iot-Smart-Agricultural-System`)
+- Problem: manual irrigation wastes water; no real-time field visibility.
+- Built: ESP32 firmware in Arduino IDE; DHT11, HC-SR04 ultrasonic, soil moisture sensor, I2C LCD, buzzer, 5V relay + mini water pump; Blynk for remote monitoring/alerts.
+- Verification (from report): six hardware tests all passed; auto-irrigation on dry soil; buzzer alerts; Blynk low-water notification.
+- Tech chips: ESP32, Arduino IDE, DHT11, HC-SR04, Soil Moisture, Blynk, IoT.
+- Note: the project report uses an ESP32; the CV's older "Raspberry Pi / Arduino Uno" phrasing is kept in the CV but the card intentionally reflects the report document.
+
+**Project 2 — Diwali Sales Data Analysis** (`assets/documents/Diwali Sales Data Analysis.pdf`, repo `ErickPradhan/DiwaliSales-DataAnalysis`)
+- Dataset: 11,251 records × 15 attributes (per report).
+- Built: pandas cleaning (dropna, de-dup, drop irrelevant cols), feature engineering (ordered age groups, purchase-value tiers), correlation/skewness/kurtosis, suite of visualisations.
+- Key results (documented in report): ANOVA occupation vs amount F=2.477, p=0.00166; Chi-square category vs zone χ²=1634.97, p≈1.45×10⁻²⁹⁶, df=68. Insights: female-led spending, adult age group highest spend, top states UP/Maharashtra/Karnataka, top categories clothing/food/electronics.
+- Tech chips: Python, Pandas, NumPy, Matplotlib, SciPy, Jupyter Notebook.
+
+No third project is shown because no other finished, documented project exists in the repository. Do not add one without real evidence.
+
+## AI assistant behavior ("Ask Erick")
+
+- Implemented in `script.js` as a local rule-based engine: an `answers` array of `[regex, reply]` pairs, matched against lowercased input.
+- No external API, no LLM, no backend, no network call. This is intentional and must stay true.
+- UI: floating FAB "Ask Erick" (`#assistantFab`) and nav button (`#openAssistant`), both `aria-haspopup="dialog" aria-controls="assistant"`. Dialog header reads "PORTFOLIO ASSISTANT". Intro message and a footer note ("Rule-based page helper · not connected to an external AI service.") make the scope explicit.
+- Behaviors: open/close, keyboard focus trap (Tab cycling), Escape closes, `aria-hidden` toggling, focus return to trigger element, three suggested prompts, 250 ms simulated reply delay.
+- The assistant answers remain consistent with the portfolio claims (facts sourced from the CV/report documents).
+
+## Design system & interactions
+
+- Tokens: `--bg:#05070a`, `--panel`, `--panel2`, `--text`, `--muted`, `--line`, `--blue:#2e9bff`, `--blue2`, `--glow`, `--max:1240px`.
+- Fonts: Space Grotesk (display) + Inter (body) via Google Fonts, async `media="print" onload` swap with `<noscript>` fallback.
+- Interactions: canvas neural background (~55 nodes), reveal-on-scroll (IntersectionObserver), scroll-spy nav highlighting, magnetic buttons, 3D tilt on cards, ticker marquee, cursor glow, asset link glow, matrix easter egg, "signal"/"bars" decorative animations.
+- Reduced motion: all of the above respect `prefers-reduced-motion` (canvas stops rAF loop, reveals un-hide, CSS animations neutralized).
+- Project detail expansion uses native `<details>/<summary>` — keyboard accessible, no JS.
+- Accessibility: skip link, focus-visible outlines (incl. `summary`), `aria-*` on menu/assistant buttons, semantic headings, `aria-live="polite"` chat, alt text on portrait, `aria-hidden` on ticker duplicates and canvas.
+
+## SEO / metadata state
+
+- Title: "Erick Pradhan — AI/ML Engineer".
+- meta description, author, robots `index, follow`.
+- Canonical: `https://erickpradhan.com.np/`.
+- og:title/description/url/image, twitter:card/title/description/image — all point to the apex domain; og:image and twitter:image are `https://erickpradhan.com.np/assets/images/Porfolio.jpg`.
+- Favicon: `assets/images/favicon.svg` (absolute-URL safe relative link).
+- JSON-LD `Person` (schema.org): name, url, image, jobTitle, email, sameAs (GitHub, LinkedIn, YouTube).
+- robots.txt: allow all + sitemap `https://erickpradhan.com.np/sitemap.xml`.
+- sitemap.xml: single URL `https://erickpradhan.com.np/`.
+- No `www.` URLs anywhere in site code. Theme color `#05070a`.
+
+## Recent changes (this update)
+
+- Restored `CNAME` (apex) — the file is required by GitHub Pages for the custom domain; it had been deleted in the previous Vercel-era cleanup.
+- Removed obsolete Vercel artifacts: `vercel.json` and `.vercel/` (deployment metadata). `.gitignore` reduced to a minimal set.
+- Reorganized assets into `assets/images`, `assets/documents`, `assets/reference`; updated all references in `index.html` and metadata.
+- Changed canonical domain usage from `www.erickpradhan.com.np` to apex `erickpradhan.com.np` across canonical/og/twitter/robots/sitemap/JSON-LD.
+- Strengthened both project cards: precise, document-verified summaries, clearer bullet points, matching tech chips, and an expandable Problem → What was built → Verification / Key results block. IoT card techs now reflect the report (ESP32/Arduino IDE/sensors/Blynk) instead of the older CV phrasing.
+- Replaced the "That's what she said!" (Michael Scott) quote with a professional, engineering-flavored attributed quote (Linus Torvalds, "Talk is cheap. Show me the code.").
+- Skills: added `HTML / CSS` (CV-supported) to the engineering cluster; skill meter converted to named self-assessed levels with an explicit "self-assessed / not benchmarked" caption instead of inline percentage marks.
+- Repositioned the assistant: renamed to "PORTFOLIO ASSISTANT" / "Ask Erick", honest intro + footer note clarifying it is a rule-based page helper with no external AI; added `aria-haspopup`/`aria-controls` and `type="button"` on suggestions.
+- CSS: styled the previously-unstyled `.chart-line` element, added `<details>` panel styles and `summary:focus-visible`, added `.assistant-note`, slightly bumped project-body text size for readability.
+- Added `url` + `image` to the JSON-LD Person schema.
+- Updated `README.md`.
+
+## Second targeted pass (2026-09-22) — after independent OpenAI code review
+
+Scope was strictly targeted: no redesign, no framework/permission changes, no new dependencies, no Vercel, no DNS/GitHub Pages changes, no content invention.
+
+### Exact changes this pass
+
+- **index.html**
+  - `<html>` now starts with `class="no-js"` and an inline 1-line script swaps it to `js` before first paint. This is the progressive-enhancement hook.
+  - `#openAssistant` and `#assistantFab` gained `aria-expanded="false"` (mirrors the `aria-haspopup`/`aria-controls` already present); the fiction is updated in JS on open/close.
+  - IoT verification wording softened to match the report exactly: "six build-and-verification phases — sensor readings, LCD output, relay-driven pump switching, and a Blynk low-water notification all functioned as intended (the report notes the ESP32 occasionally needed a reboot during extended testing)." Previously it said "six hardware tests all passed", which the report does not literally support (the six items are wiring/build phases, and the report mentions intermittent reboots).
+  - AI Lab terminal line changed from "→ 4 active research slots detected" to "→ 4 research slots in progress" so it no longer reads as measured runtime telemetry.
+- **styles.css**
+  - Reveal-on-scroll hiding is now gated on `html.js .reveal{…}` / `html.js .reveal.visible{…}`; the default `.reveal{opacity:1;transform:none}` keeps all content readable when JS is disabled or fails. Animations are unchanged when JS works.
+  - Modest readability bumps for the smallest text (design unchanged): skill-meter labels 8→10px, lab-grid phase tags 8→10px, suggestions buttons 9→10px, timeline dates 9→10px, portrait-quote cite 9→10px, `summary` label 10→11px, detail-block headers 9→10px, assistant note 9→10px, meter note 10→11px.
+- **script.js**
+  - Mobile menu: opening focuses the first nav link (`preventScroll`); closing after a link choice does not yank focus; Escape returns focus to the menu button when focus is still inside the menu. UX and markup untouched otherwise.
+  - Assistant: `openAI`/`closeAI` now toggle `aria-expanded` on both triggers and bump an internal `assistantEpoch`; the 250 ms delayed reply is discarded if the epoch changed (assistant closed/reopened) or the panel is no longer open — stale responses can no longer be inserted after close/reset.
+  - Escape handler now routes mobile-menu close through `closeMobileMenu(true)` for focus return.
+- **No CV/PDF edits.** All three PDFs are byte-for-byte untouched (verified via git and re-hashed from the previous state's copies in Git).
+
+### CV inconsistency — status & evidence
+
+The CV (`assets/documents/Erick_Pradhan.pdf`) "ACADEMIC PROJECTS → IoT Smart Agriculture" says it was built "using **Raspberry Pi and Arduino Uno**" with "a monitoring dashboard". The authoritative project report (`assets/documents/IoT Smart Agriculture System.pdf`, 16 pages) documents **ESP32** written in the **Arduino IDE**, wired to **DHT11, HC-SR04, soil moisture sensor, I2C LCD, buzzer, 5V relay + mini water pump**, monitored via **Blynk** — and contains **zero** occurrences of "Raspberry Pi" (extracted text verified programmatically with pypdf).
+
+The CV was NOT modified this pass. The portfolio reflects the report (ESP32-based), which is the correct, primary-documented version. Correcting the CV is a PDF-content edit that should be done deliberately by the owner (or a later approved pass), not silently by the site migration. The only honest hint on the site is the general skills list, which lists "Raspberry Pi" and "Arduino Uno" as hardware skills (also present in the CV) — that is not a project claim and was left as-is.
+
+### Deployment-ready status (2nd pass)
+
+- Structure unchanged: single-page static at repo root, assets under `assets/images`, `assets/documents`, `assets/reference`.
+- All local `href`/`src` references point to files that exist on disk in this repository.
+- No Vercel artifacts in the repo; canonical/OG/robots/sitemap all use the apex `erickpradhan.com.np`.
+- The working tree contains the intended move of production files into `assets/` plus new `robots.txt`/`sitemap.xml`. These still need `git add`; nothing must be committed with the old-root deletions replayed as losses. **Do not `git add -A` blindly and push** — the move must be committed as a rename/inclusion so the new files land in the repo.
+- `assets/reference/` is intentionally non-production reference material — keep it for now (see remaining issues).
+
+## Verification — 1st pass (2026-09-22)
+
+Done after the first migration edits:
+
+- `node --check script.js` — JS syntax OK (verified by command, Node installed).
+- HTML parsed with a python `HTMLParser` — no unclosed/mismatched tags (verified by command).
+- JSON-LD block parses as valid JSON (verified by command).
+- All local `href`/`src` assets exist on disk after the move (verified by command): favicon, Porfolio.jpg, both project PDFs, CV PDF, styles.css, script.js.
+- All internal anchors resolve to existing `id`s (verified by command).
+- CSS braces balanced (verified by command).
+- `canonical`, `og:url`, `og:image`, `twitter:image` all = valid apex-domain URLs; zero `www.` references in `index.html` (verified by command).
+- `robots.txt` and `CNAME` contain the exact apex entries; sitemap `<loc>` is `https://erickpradhan.com.np/` (verified by command).
+- No `vercel`/`vercel.app`/`vercel.com` references remain in site code; the only remaining string is the protective `.vercel` line in `.gitignore` and this historical note (verified by grep).
+- External links (GitHub repos/profile, LinkedIn, YouTube, mailto, Google Fonts) untouched (verified by inspection).
+- Reduced-motion handling unchanged and still present (verified by inspection).
+- Still fully static, no framework/build (verified by inspection).
+
+## Verification — 2nd pass (2026-09-22)
+
+Re-ran the full local verification suite after the changes above (all passed by command):
+
+1. `node --check script.js` — JS syntax OK.
+2. HTML parsed — no unclosed/mismatched tags; `no-js`/`js` class swap present in markup.
+3. JSON-LD `Person` block valid; `url` = `https://erickpradhan.com.np/`.
+4. All 7 local `href`/`src` references resolve to existing files (incl. space-named PDFs and `%20`-encoded links).
+5. All internal anchors (`#work`, `#about`, `#skills`, `#lab`, `#contact`, `#main-content`) resolve to existing `id`s.
+6. CSS braces balanced (266/266); reveal hiding now gated on `html.js` for no-JS readability.
+7. `CNAME` = `erickpradhan.com.np`; `robots.txt` points at apex sitemap; `sitemap.xml` well-formed with apex `<loc>`.
+8. canonical + og:url = apex; zero `vercel.*` / `vercel.json` / `www.erickpradhan.com.np` in site code (the only `www.` left is the legitimate LinkedIn external URL).
+9. Assistant `aria-expanded` present on both triggers and updated from JS; stale delayed replies guarded by an epoch counter.
+10. Mobile-menu open focuses first link, Escape returns focus, link click closes without yanking focus (code-inspection verified).
+11. Both project GitHub repos (`ErickPradhan/Iot-Smart-Agricultural-System`, `ErickPradhan/DiwaliSales-DataAnalysis`) confirmed public and reachable (fetched live via web).
+12. Project statistics cross-checked against the primary documents: Diwali (11,251 rows; ANOVA F=2.477, p=0.00166; χ²=1634.97, p≈1.45×10⁻²⁹⁶; top states UP/Maharashtra/Karnataka; top categories clothing/food/electronics) — all match the report; IoT six-phase verification and ESP32/Arduino IDE/DHT11/HC-SR04/moisture/Blynk hardware list match the report.
+
+Not performed this pass: no real browser runtime testing (no browser available in this environment — no desktop/headless Chrome/Edge/Firefox found), so desktop load, live assistant open/close, mobile menu interaction, PDF link downloads, and external-link clicks were verified by static inspection + code reasoning only, not by live runtime. DNS/HTTPS against the live domain also still requires the deployment to land.
+
+## Remaining known issues
+
+- Card descriptions and expandable content are hardcoded in `index.html` (single-file pattern by design).
+- Legacy images kept in `assets/reference/` for safety — could be deleted later once everyone is sure they are unused (confirmed unreferenced by code). They are non-production reference material by design and remain in this pass.
+- `Porfolio.png` (2.2 MB) is the master source and is kept in `reference/`; only the ~187 KB JPEG is served.
+- CV describes the IoT academic project as "Raspberry Pi and Arduino Uno" with a "monitoring dashboard", which conflicts with the project report's ESP32 / Arduino IDE / DHT11 / HC-SR04 / Blynk implementation (report verified to contain no "Raspberry Pi"). The portfolio is report-accurate; the CV is untouched by design. Updating the CV is a deliberate PDF-content edit for the owner (or a future approved pass) — it should be fixed so documents agree.
+- The working tree's current state is a file move into `assets/` plus new `robots.txt`/`sitemap.xml`. It is deployment-ready as a repository state, but the move has NOT been staged/committed. Commit it as an intentional inclusion of the moved/new files (do not let the old-root deletions be replayed as data loss), then push to `main` for GitHub Pages to serve.
+- No CI/Lighthouse/HTML validator automation is wired up; no live-browser runtime test was possible in this environment.
+
+## Future recommendations
+
+1. Stage the move deliberately (`git add` the `assets/` tree, `robots.txt`, `sitemap.xml`, and the modified `index.html`/`styles.css`/`script.js`/`PROJECT_STATE.md`/`README.md`), commit, then push to `main` — GitHub Pages + Cloudflare DNS are already the intended architecture; verify the deployed apex URL resolves after it lands.
+2. Update the CV's IoT academic-project entry to the report-accurate hardware (ESP32 / Arduino IDE / DHT11 / HC-SR04 / Blynk) so the CV and report agree. Owner-approved PDF edit.
+3. Optionally delete `assets/reference/*` after confirming Git history retains the removed duplicates.
+4. Add a third project card only with real documented evidence (repo + PDF).
+5. Keep the assistant rule-based, or in a future iteration link it to a real service — never make it look like an LLM while it is not one.
