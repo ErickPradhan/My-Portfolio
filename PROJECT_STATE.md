@@ -44,7 +44,7 @@ assets/
     favicon.svg         site favicon
   documents/
     Erick_Pradhan.pdf   CV (linked as Download CV)
-    IoT Smart Agriculture System.pdf   project document
+    IoT Based Smart Irrigation System.pdf   project document
     Diwali Sales Data Analysis.pdf     project document
   reference/
     Porfolio.png        master portrait source image (not referenced)
@@ -76,7 +76,7 @@ Notable absences (intentional): no `src/`, no `public/`, no `components/`, no `p
 
 Two cards, hardcoded in HTML (not data-driven). Each card has: a CSS illustration visual, tag, title, 2-line summary, 3 bullet points, technology chips, an expandable `<details>` block ("Implementation & verification" / "Implementation & results"), and two links (Project document PDF + View Repository, both `target="_blank" rel="noopener noreferrer"`).
 
-**Project 1 — IoT Smart Agriculture** (`assets/documents/IoT Smart Agriculture System.pdf`, repo `ErickPradhan/Iot-Smart-Agricultural-System`)
+**Project 1 — IoT Smart Agriculture** (`assets/documents/IoT Based Smart Irrigation System.pdf`, repo `ErickPradhan/Iot-Smart-Agricultural-System`)
 - Problem: manual irrigation wastes water; no real-time field visibility.
 - Built: ESP32 firmware in Arduino IDE; DHT11, HC-SR04 ultrasonic, soil moisture sensor, I2C LCD, buzzer, 5V relay + mini water pump; Blynk for remote monitoring/alerts.
 - Verification (from report): six hardware tests all passed; auto-irrigation on dry soil; buzzer alerts; Blynk low-water notification.
@@ -156,7 +156,7 @@ Scope was strictly targeted: no redesign, no framework/permission changes, no ne
 
 ### CV inconsistency — status & evidence
 
-The CV (`assets/documents/Erick_Pradhan.pdf`) "ACADEMIC PROJECTS → IoT Smart Agriculture" says it was built "using **Raspberry Pi and Arduino Uno**" with "a monitoring dashboard". The authoritative project report (`assets/documents/IoT Smart Agriculture System.pdf`, 16 pages) documents **ESP32** written in the **Arduino IDE**, wired to **DHT11, HC-SR04, soil moisture sensor, I2C LCD, buzzer, 5V relay + mini water pump**, monitored via **Blynk** — and contains **zero** occurrences of "Raspberry Pi" (extracted text verified programmatically with pypdf).
+The CV (`assets/documents/Erick_Pradhan.pdf`) "ACADEMIC PROJECTS → IoT Smart Agriculture" says it was built "using **Raspberry Pi and Arduino Uno**" with "a monitoring dashboard". The authoritative project report (`assets/documents/IoT Based Smart Irrigation System.pdf`, 16 pages) documents **ESP32** written in the **Arduino IDE**, wired to **DHT11, HC-SR04, soil moisture sensor, I2C LCD, buzzer, 5V relay + mini water pump**, monitored via **Blynk** — and contains **zero** occurrences of "Raspberry Pi" (extracted text verified programmatically with pypdf).
 
 The CV was NOT modified this pass. The portfolio reflects the report (ESP32-based), which is the correct, primary-documented version. Correcting the CV is a PDF-content edit that should be done deliberately by the owner (or a later approved pass), not silently by the site migration. The only honest hint on the site is the general skills list, which lists "Raspberry Pi" and "Arduino Uno" as hardware skills (also present in the CV) — that is not a project claim and was left as-is.
 
