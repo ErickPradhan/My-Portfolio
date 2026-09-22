@@ -34,6 +34,7 @@
   <canvas id="network" aria-hidden="true"></canvas>
   <div class="scanlines"></div>
   <div class="cursor-glow"></div>
+  <svg aria-hidden="true" focusable="false" style="position:absolute;width:0;height:0;overflow:hidden"><defs><symbol id="sheru-icon" viewBox="0 0 24 24"><circle cx="6.6" cy="7.4" r="2.6" fill="currentColor"/><circle cx="17.4" cy="7.4" r="2.6" fill="currentColor"/><circle cx="12" cy="13.4" r="7.6" fill="currentColor"/><circle cx="9.2" cy="11.6" r=".8" fill="#080c11"/><circle cx="14.8" cy="11.6" r=".8" fill="#080c11"/><ellipse cx="12" cy="15" rx="1.1" ry=".85" fill="#080c11"/><path d="M10.6 16.7c.9.7 1.9.7 2.8 0" stroke="#080c11" stroke-width=".7" stroke-linecap="round" fill="none"/></symbol></defs></svg>
 
   <header class="nav">
     <a class="brand" href="#main-content" aria-label="Erick Pradhan home"><span>EP</span><i></i></a>
@@ -44,7 +45,7 @@
       <a href="#lab">AI Lab</a>
       <a href="#contact">Contact</a>
     </nav>
-    <button class="nav-ai" id="openAssistant" aria-haspopup="dialog" aria-controls="assistant" aria-expanded="false">Ask Erick <span>↗</span></button>
+    <button class="nav-ai" id="openAssistant" aria-haspopup="dialog" aria-controls="assistant" aria-expanded="false">Ask Sheru <span>↗</span></button>
     <button class="menu" id="menuBtn" type="button" aria-label="Open menu" aria-controls="desktopNav" aria-expanded="false">☰</button>
   </header>
 
@@ -97,20 +98,20 @@
     <section class="section process">
       <div class="section-head reveal">
         <div><span class="section-no">01</span><span class="eyebrow">HOW I BUILD</span></div>
-        <p>I work across AI, data, software engineering, and connected systems to turn ideas into practical tools.</p>
+        <p class="head-just">I work across AI, data, software engineering, and connected systems to turn ideas into practical tools.</p>
       </div>
       <div class="process-grid reveal">
-        <article class="process-card">
+        <article class="process-card card-lift">
           <span>01</span>
           <h3>Problem-first thinking</h3>
           <p>I start with a clear objective, then map the technical path needed to make it useful, measurable, and reliable.</p>
         </article>
-        <article class="process-card">
+        <article class="process-card card-lift">
           <span>02</span>
           <h3>AI and data</h3>
           <p>My work blends machine learning, data analysis, and intelligent automation with a focus on real-world application.</p>
         </article>
-        <article class="process-card">
+        <article class="process-card card-lift">
           <span>03</span>
           <h3>Systems that work</h3>
           <p>I enjoy building connected systems, APIs, dashboards, and edge hardware projects that solve real operational problems.</p>
@@ -121,7 +122,7 @@
     <section id="work" class="section work">
       <div class="section-head reveal">
         <div><span class="section-no">01</span><span class="eyebrow">SELECTED SYSTEMS</span></div>
-        <p>Built to solve problems, not just demonstrate frameworks.</p>
+        <p class="head-just">Built to solve problems, not just demonstrate frameworks.</p>
       </div>
       <div class="projects">
         <article class="project-card tilt reveal">
@@ -149,7 +150,7 @@
                 <div class="more-block"><b>Verification</b><p>Documented in the project report: six build-and-verification phases — sensor readings, LCD output, relay-driven pump switching, and a Blynk low-water notification all functioned as intended (the report notes the ESP32 occasionally needed a reboot during extended testing).</p></div>
               </div>
             </details>
-            <div class="project-links"><a class="view-project" href="assets/documents/IoT%20Based%20Smart%20Irrigation%20System.pdf" target="_blank" rel="noopener noreferrer">Project document <span>↗</span></a><a href="https://github.com/ErickPradhan/Iot-Smart-Agricultural-System" target="_blank" rel="noopener noreferrer">View Repository ↗</a></div>
+            <div class="project-links"><a class="view-project" href="assets/documents/IoT%20Based%20Smart%20Irrigation%20System.pdf" target="_blank" rel="noopener noreferrer">Project document <span>↗</span></a><a href="https://github.com/ErickPradhan/Iot-Smart-Agricultural-System" target="_blank" rel="noopener noreferrer">View Repository <span class="arr" aria-hidden="true">↗</span></a></div>
           </div>
         </article>
 
@@ -178,7 +179,7 @@
                 <div class="more-block"><b>Key results</b><p>ANOVA shows purchase amount differs significantly by occupation (F = 2.477, p = 0.00166); Chi-square confirms a product-category–zone association (χ² = 1634.97, p ≈ 1.45 × 10⁻²⁹⁶). Findings: female customers drive higher sales, the adult age group spends most, and sales concentrate in Uttar Pradesh, Maharashtra, and Karnataka — led by clothing, food, and electronics.</p></div>
               </div>
             </details>
-            <div class="project-links"><a class="view-project" href="assets/documents/Diwali%20Sales%20Data%20Analysis.pdf" target="_blank" rel="noopener noreferrer">Project document <span>↗</span></a><a href="https://github.com/ErickPradhan/DiwaliSales-DataAnalysis" target="_blank" rel="noopener noreferrer">View Repository ↗</a></div>
+            <div class="project-links"><a class="view-project" href="assets/documents/Diwali%20Sales%20Data%20Analysis.pdf" target="_blank" rel="noopener noreferrer">Project document <span>↗</span></a><a href="https://github.com/ErickPradhan/DiwaliSales-DataAnalysis" target="_blank" rel="noopener noreferrer">View Repository <span class="arr" aria-hidden="true">↗</span></a></div>
           </div>
         </article>
 
@@ -188,11 +189,11 @@
     <section id="about" class="section about">
       <div class="section-head reveal"><div><span class="section-no">02</span><span class="eyebrow">ABOUT THE ENGINEER</span></div></div>
       <div class="about-grid">
-        <div class="about-statement reveal"><span class="quote">“</span><h2>I like turning<br><em>complex ideas</em><br>into working systems.</h2></div>
+        <div class="about-statement reveal"><span class="quote">“</span><h2 class="type-heading" data-type="I like turning complex ideas into working systems."><span class="type-static">I like turning complex ideas into working systems.</span><span class="type-render" aria-hidden="true"></span><span class="type-caret" aria-hidden="true"></span></h2></div>
         <div class="about-copy reveal">
           <p>I'm Erick Pradhan, an undergraduate <strong>BSc (Hons) Computing with Artificial Intelligence</strong> student at Islington College, affiliated with London Metropolitan University. I am pursuing opportunities as an AI/ML Engineer where intelligent models meet useful software.</p>
           <p>My work spans machine learning, data analysis, generative AI, APIs, cloud technologies, full-stack development, and physical computing. I learn by building — from academic projects and prototypes to experiments that can become practical products.</p>
-          <div class="facts"><div><strong>01</strong><span>Build<br>first</span></div><div><strong>02</strong><span>Learn<br>deep</span></div><div><strong>03</strong><span>Ship<br>clean</span></div></div>
+          <div class="facts"><div class="fact-card"><strong>01</strong><span>Build<br>first</span></div><div class="fact-card"><strong>02</strong><span>Learn<br>deep</span></div><div class="fact-card"><strong>03</strong><span>Ship<br>clean</span></div></div>
         </div>
       </div>
     </section>
@@ -200,11 +201,12 @@
     <section id="skills" class="section skills">
       <div class="section-head reveal"><div><span class="section-no">03</span><span class="eyebrow">TECHNICAL STACK</span></div><p>A growing toolkit for intelligent, connected software.</p></div>
       <div class="skill-wall reveal">
-        <div class="skill-cluster"><h3>AI / ML</h3><span>Machine Learning</span><span>Generative AI</span><span>LLM APIs</span><span>AI Automation</span><span>Data Analysis</span></div>
-        <div class="skill-cluster"><h3>Engineering</h3><span>Python</span><span>Java</span><span>JavaScript</span><span>SQL</span><span>REST APIs</span><span>React.js</span><span>Node.js</span><span>HTML / CSS</span></div>
-        <div class="skill-cluster"><h3>Data / Cloud</h3><span>MySQL</span><span>MongoDB</span><span>Supabase</span><span>DynamoDB</span><span>AWS</span><span>Docker</span></div>
-        <div class="skill-cluster"><h3>Systems</h3><span>Git / GitHub</span><span>Linux / WSL</span><span>Raspberry Pi</span><span>Arduino Uno</span><span>IoT</span></div>
+        <div class="skill-cluster"><h3>AI / ML</h3><span data-skill="machine learning">Machine Learning</span><span data-skill="generative ai">Generative AI</span><span data-skill="llm apis">LLM APIs</span><span>AI Automation</span><span data-skill="data analysis">Data Analysis</span></div>
+        <div class="skill-cluster"><h3>Engineering</h3><span data-skill="python">Python</span><span>Java</span><span>JavaScript</span><span>SQL</span><span>REST APIs</span><span>React.js</span><span>Node.js</span><span>HTML / CSS</span></div>
+        <div class="skill-cluster"><h3>Data / Cloud</h3><span>MySQL</span><span>MongoDB</span><span>Supabase</span><span>DynamoDB</span><span data-skill="aws">AWS</span><span>Docker</span></div>
+        <div class="skill-cluster"><h3>Systems</h3><span>Git / GitHub</span><span>Linux / WSL</span><span data-skill="raspberry pi">Raspberry Pi</span><span data-skill="arduino uno">Arduino Uno</span><span data-skill="iot">IoT</span></div>
       </div>
+      <p class="skill-context" id="skillContext" aria-live="polite">Hover or focus a skill to see how it shows up in my work.</p>
       <div class="skill-meter reveal">
         <div><span>AI / ML</span><i><b class="lv1"></b></i><small>FOCUS</small></div>
         <div><span>Software Engineering</span><i><b class="lv2"></b></i><small>BUILDING</small></div>
@@ -216,30 +218,31 @@
     <section class="section timeline">
       <div class="section-head reveal"><div><span class="section-no">04</span><span class="eyebrow">JOURNEY</span></div></div>
       <div class="timeline-grid">
-        <div class="timeline-item reveal"><span>EDUCATION</span><h2>BSc (Hons) Computing with Artificial Intelligence</h2><p>Studying computing, AI, software engineering, and applied intelligent systems at Islington College in affiliation with London Metropolitan University.</p><small>2024 — PRESENT</small></div>
-        <div class="timeline-item reveal"><span>EXPERIENCE</span><h2>Mathematics &amp; English Tutor</h2><p>Planned lessons, assessed Grade 9 and Grade 10 student progress, and provided individual support that promoted stronger academic performance in a positive learning environment.</p><small>JUN 2025 — SEP 2025</small></div>
-        <div class="timeline-item reveal"><span>CERTIFICATIONS</span><h2>AWS Academy Learning</h2><p>Completed AWS Academy Cloud Foundations, Data Engineering, Machine Learning Foundations, and Machine Learning for Natural Language Processing.</p><small>DEC 2024</small></div>
+        <article class="timeline-item tl-item reveal" tabindex="0"><span class="tl-cat">EDUCATION</span><h2>BSc (Hons) Computing with Artificial Intelligence</h2><p>Studying computing, AI, software engineering, and applied intelligent systems at Islington College in affiliation with London Metropolitan University.</p><small>2024 — PRESENT</small></article>
+        <article class="timeline-item tl-item reveal" tabindex="0"><span class="tl-cat">EXPERIENCE</span><h2>Mathematics &amp; English Tutor</h2><p>Planned lessons, assessed Grade 9 and Grade 10 student progress, and provided individual support that promoted stronger academic performance in a positive learning environment.</p><small>JUN 2025 — SEP 2025</small></article>
+        <article class="timeline-item tl-item reveal" tabindex="0"><span class="tl-cat">CERTIFICATIONS</span><h2>AWS Academy Learning</h2><p>Completed AWS Academy Cloud Foundations, Data Engineering, Machine Learning Foundations, and Machine Learning for Natural Language Processing.</p><small>DEC 2024</small></article>
       </div>
     </section>
 
     <section id="lab" class="section lab">
       <div class="section-head reveal"><div><span class="section-no">05</span><span class="eyebrow">AI LAB / EXPERIMENTS</span></div><p>Where unfinished ideas become prototypes.</p></div>
       <div class="lab-console reveal">
-        <div class="console-bar"><span></span><span></span><span></span><b>erick@ai-lab:~</b></div>
+        <div class="console-bar"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span><b>erick@ai-lab:~</b></div>
         <div class="console-content">
           <div class="terminal-line"><span>$</span> system.scan()</div>
           <div class="terminal-line result">→ 4 research slots in progress</div>
           <div class="lab-grid">
-            <div><b>01</b><strong>LLM / RAG</strong><span>Knowledge systems</span><em>EXPLORING</em></div>
-            <div><b>02</b><strong>AI AUTOMATION</strong><span>Agentic workflows</span><em>EXPLORING</em></div>
-            <div><b>03</b><strong>COMPUTER VISION</strong><span>Visual intelligence</span><em>QUEUED</em></div>
-            <div><b>04</b><strong>EDGE AI</strong><span>IoT + intelligence</span><em>QUEUED</em></div>
+            <div class="lab-slot" tabindex="0" data-desc="RAG pipelines and LLM API calls for retrieval over custom documents — early exploration."><b>01</b><strong>LLM / RAG</strong><span>Knowledge systems</span><em>EXPLORING</em></div>
+            <div class="lab-slot" tabindex="0" data-desc="Prototyping agentic workflows that compose LLM calls into small tools — exploring."><b>02</b><strong>AI AUTOMATION</strong><span>Agentic workflows</span><em>EXPLORING</em></div>
+            <div class="lab-slot" tabindex="0" data-desc="OpenCV and vision-model experiments — queued."><b>03</b><strong>COMPUTER VISION</strong><span>Visual intelligence</span><em>QUEUED</em></div>
+            <div class="lab-slot" tabindex="0" data-desc="Running small models on edge hardware (Raspberry Pi / Arduino-friendly) — queued."><b>04</b><strong>EDGE AI</strong><span>IoT + intelligence</span><em>QUEUED</em></div>
           </div>
+          <p class="lab-slot-note" id="labSlotNote" aria-live="polite">Focus or hover a research slot to preview its status.</p>
           <p class="terminal-note">Local interactive terminal · predefined commands · no external AI.</p>
         </div>
         <div class="terminal-out" id="terminalOut" role="log" aria-live="polite" aria-label="AI lab terminal output"></div>
         <form class="terminal-form" id="terminalForm">
-          <span class="terminal-prompt" aria-hidden="true">erick@ai-lab:~$</span>
+          <span class="terminal-prompt" aria-hidden="true">erick@ai-lab:<b>~</b>$<i class="term-caret"></i></span>
           <input id="terminalInput" type="text" placeholder="type 'help'" aria-label="AI lab terminal command" autocomplete="off" spellcheck="false" maxlength="120">
         </form>
       </div>
@@ -247,7 +250,7 @@
 
     <section id="cv" class="section cv">
       <div class="cv-card reveal">
-        <div><span class="eyebrow">06 / CV</span><h2>Want the full<br><em>technical profile?</em></h2><p>Download the latest CV for education, projects, technical skills, certifications, and experience.</p></div>
+        <div><span class="eyebrow">06 / CV</span><h2 class="type-heading" data-type="Want the full technical profile?"><span class="type-static">Want the full technical profile?</span><span class="type-render" aria-hidden="true"></span><span class="type-caret" aria-hidden="true"></span></h2><p>Download the latest CV for education, projects, technical skills, certifications, and experience.</p></div>
           <a class="btn primary magnetic" href="assets/documents/Erick_Pradhan.pdf" download>Download CV ↓</a>
       </div>
     </section>
@@ -256,23 +259,38 @@
       <div class="section-head reveal"><div><span class="section-no">07</span><span class="eyebrow">CONTACT</span></div></div>
       <div class="contact-grid">
         <div class="contact-copy reveal"><h2>Let's build something<br><em>intelligent.</em></h2><p>Open to internships, collaborations, research conversations, and technical opportunities where AI, data, software engineering, and systems thinking can create clear value.</p></div>
-        <div class="contact-links reveal">
-          <a href="mailto:erickpradhan2@gmail.com"><span>EMAIL</span><strong>erickpradhan2@gmail.com</strong><b>↗</b></a>
-          <a href="https://github.com/ErickPradhan" target="_blank" rel="noopener noreferrer"><span>GITHUB</span><strong>github.com/ErickPradhan</strong><b>↗</b></a>
-          <a href="https://www.linkedin.com/in/erick-pradhan-6a879521b/" target="_blank" rel="noopener noreferrer"><span>LINKEDIN</span><strong>linkedin.com/in/erick-pradhan-6a879521b</strong><b>↗</b></a>
-          <a href="https://www.youtube.com/@DevBy-x8e" target="_blank" rel="noopener noreferrer"><span>YOUTUBE</span><strong>youtube.com/@DevBy-x8e</strong><b>↗</b></a>
+        <div class="contact-main reveal">
+          <form class="contact-form" id="contactForm" novalidate>
+            <div class="field"><label for="cfName">Name</label><input id="cfName" aria-describedby="cfNameErr" name="name" type="text" autocomplete="name" required maxlength="80" placeholder="e.g. Mary-Jane O'Connor"><span class="field-error" id="cfNameErr" role="alert"></span></div>
+            <div class="field"><label for="cfEmail">Email</label><input id="cfEmail" aria-describedby="cfEmailErr" name="email" type="email" autocomplete="email" required maxlength="120"><span class="field-error" id="cfEmailErr" role="alert"></span></div>
+            <div class="field"><label for="cfSubject">Subject</label><input id="cfSubject" aria-describedby="cfSubjectErr" name="subject" type="text" required maxlength="120"><span class="field-error" id="cfSubjectErr" role="alert"></span></div>
+            <div class="field"><label for="cfMessage">Message</label><textarea id="cfMessage" aria-describedby="cfMessageErr" name="message" rows="4" required maxlength="2000"></textarea><span class="field-error" id="cfMessageErr" role="alert"></span></div>
+            <button class="btn primary" type="submit">Send message <span>↗</span></button>
+            <p class="form-note">Demo form — validates locally and shows a preview state only. It isn't connected to an email service yet, so nothing is actually sent. Direct: <a href="mailto:erickpradhan2@gmail.com">erickpradhan2@gmail.com</a></p>
+          </form>
+          <div class="contact-success" id="contactSuccess" hidden>
+            <b>Message ready — nothing sent (demo).</b>
+            <p>This form only previews a successful submit. For a real response, email <a href="mailto:erickpradhan2@gmail.com">erickpradhan2@gmail.com</a>.</p>
+            <button class="btn ghost" id="cfReset" type="button">Write another message</button>
+          </div>
+          <div class="contact-links">
+            <a class="email-compose" href="mailto:erickpradhan2@gmail.com" data-to="erickpradhan2@gmail.com" aria-label="Email Erick at erickpradhan2@gmail.com — opens Gmail compose in a new tab" title="Opens Gmail compose in a new tab (mailto fallback if blocked)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/></svg><span>EMAIL</span></a>
+            <a href="https://github.com/ErickPradhan" target="_blank" rel="noopener noreferrer" aria-label="GitHub — github.com/ErickPradhan"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.71c-2.78.61-3.36-1.34-3.36-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.09-2.64 0 0 .84-.27 2.75 1.02a9.58 9.58 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.86v2.74c0 .26.18.58.69.48A10 10 0 0 0 12 2Z"/></svg><span>GITHUB</span></a>
+            <a href="https://www.linkedin.com/in/erick-pradhan-6a879521b/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn — Erick Pradhan"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5A2.49 2.49 0 1 1 0 3.5a2.49 2.49 0 0 1 4.98 0ZM.5 8h4v12h-4V8Zm7.5 0h3.83v1.64h.05c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.78 2.65 4.78 6.1v6.32h-4v-5.6c0-1.34-.03-3.06-1.87-3.06-1.87 0-2.15 1.46-2.15 2.96v5.7h-4V8Z"/></svg><span>LINKEDIN</span></a>
+            <a href="https://www.youtube.com/@DevBy-x8e" target="_blank" rel="noopener noreferrer" aria-label="YouTube — DevBy channel"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.58 7.19a2.5 2.5 0 0 0-1.76-1.77C18.24 5 12 5 12 5s-6.24 0-7.82.42A2.5 2.5 0 0 0 2.42 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .42 4.8 2.5 2.5 0 0 0 1.76 1.77C5.76 19 12 19 12 19s6.24 0 7.82-.43a2.5 2.5 0 0 0 1.76-1.77A26 26 0 0 0 22 12a26 26 0 0 0-.42-4.81ZM10 15.06V8.94L15.5 12 10 15.06Z"/></svg><span>YOUTUBE</span></a>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
-  <button class="assistant-fab" id="assistantFab" aria-label="Open portfolio assistant" aria-haspopup="dialog" aria-controls="assistant" aria-expanded="false"><span>✦</span> Ask Erick</button>
+  <button class="assistant-fab" id="assistantFab" aria-label="Open Ask Sheru assistant" aria-haspopup="dialog" aria-controls="assistant" aria-expanded="false"><svg class="sheru-avatar" aria-hidden="true"><use href="#sheru-icon"/></svg> Ask Sheru</button>
   <div class="assistant" id="assistant" role="dialog" aria-modal="true" aria-labelledby="assistantTitle" aria-hidden="true">
-    <div class="assistant-head"><div id="assistantTitle"><span class="pulse"></span> PORTFOLIO ASSISTANT</div><button id="closeAssistant" type="button" aria-label="Close assistant">×</button></div>
-    <div class="assistant-body" id="chat" aria-live="polite"><div class="msg bot">Hi, I'm Erick's portfolio assistant — a curated guide built into this page (no external AI). Ask me about his projects, AI/ML and software skills, education, experience, or tech stack.</div></div>
+    <div class="assistant-head"><div id="assistantTitle"><svg class="sheru-avatar" aria-hidden="true"><use href="#sheru-icon"/></svg> SHERU · PAGE GUIDE</div><button id="closeAssistant" type="button" aria-label="Close assistant">×</button></div>
+    <div class="assistant-body" id="chat" aria-live="polite"><div class="msg bot"><svg class="sheru-avatar" aria-hidden="true"><use href="#sheru-icon"/></svg><span class="msg-text">Hi, I'm Sheru — Erick's page companion. I'm a curated rule-based guide built into this page (no external AI). Ask about his projects, AI/ML and software skills, education, experience, or tech stack.</span></div></div>
     <div class="suggestions"><button type="button" data-q="What does Erick do?">What does he do?</button><button type="button" data-q="What are his AI skills?">AI skills</button><button type="button" data-q="Tell me about his projects">Projects</button></div>
-    <p class="assistant-note">Rule-based page helper · not connected to an external AI service.</p>
-    <form id="chatForm"><input id="chatInput" placeholder="Ask about Erick..." autocomplete="off" maxlength="300" aria-label="Ask Erick a question"><button type="submit" aria-label="Send question">↗</button></form>
+    <p class="assistant-note">Sheru · rule-based page helper · not connected to an external AI service.</p>
+    <form id="chatForm"><input id="chatInput" placeholder="Ask Sheru about Erick..." autocomplete="off" maxlength="300" aria-label="Ask Sheru a question about Erick"><button type="submit" aria-label="Send question">↗</button></form>
   </div>
 
   <div class="palette-overlay" id="paletteOverlay" aria-hidden="true">
@@ -290,10 +308,10 @@
         <li class="palette-item" id="pi-lab" role="option"><button type="button" data-action="lab" data-search="lab ai lab terminal experiments research" tabindex="-1"><span>Go to</span><strong>AI Lab</strong></button></li>
         <li class="palette-item" id="pi-cv" role="option"><button type="button" data-action="cv" data-search="cv resume curriculum vitae" tabindex="-1"><span>Go to</span><strong>CV</strong></button></li>
         <li class="palette-item" id="pi-contact" role="option"><button type="button" data-action="contact" data-search="contact email connect reach" tabindex="-1"><span>Go to</span><strong>Contact</strong></button></li>
-        <li class="palette-item" id="pi-assistant" role="option"><button type="button" data-action="assistant" data-search="assistant ask chat ask erick" tabindex="-1"><span>Open</span><strong>Assistant</strong></button></li>
+        <li class="palette-item" id="pi-assistant" role="option"><button type="button" data-action="assistant" data-search="assistant ask chat ask erick ask sheru" tabindex="-1"><span>Open</span><strong>Assistant</strong></button></li>
         <li class="palette-empty" id="paletteEmpty" hidden>No matching commands.</li>
       </ul>
-      <div class="palette-hint"><span><kbd>↑</kbd><kbd>↓</kbd> Navigate</span><span><kbd>↵</kbd> Run</span><span><kbd>Esc</kbd> Close</span></div>
+      <div class="palette-hint"><span id="hintUp"><kbd>↑</kbd> Navigate</span><span id="hintDown"><kbd>↓</kbd> Navigate</span><span id="hintRun"><kbd>↵</kbd> Run</span><span id="hintEsc"><kbd>Esc</kbd> Close</span></div>
     </div>
   </div>
 

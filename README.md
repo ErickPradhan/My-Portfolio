@@ -44,8 +44,11 @@ GitHub Pages requires the `CNAME` file (with `erickpradhan.com.np`) at the repos
 
 ## Interactive features
 
-- **Command palette**: Press `Ctrl/Cmd+K` (or click "COMMANDS Ctrl+K") to navigate sections and open the assistant.
-- **AI Lab terminal**: Local, rule-based terminal with `help`, `about`, `projects`, `skills`, `stack`, `lab`, `contact`, `github`, `clear`. No external AI service.
-- **Assistant**: Rule-based "Ask Erick" helper with honest scope note.
+- **Command palette**: Press `Ctrl/Cmd+K` (or click "COMMANDS Ctrl+K") to navigate sections and open the assistant. Arrow up/down, Enter, and Escape keys glow on the hint bar as you use them.
+- **AI Lab terminal**: Local, rule-based terminal with `help`, `about`, `projects`, `skills`, `stack`, `lab`, `contact`, `github`, `clear`. Hover/focus a research slot to preview its status.
+- **Assistant "Sheru"**: Rule-based page helper (the owner's dog) with honest scope note, typing indicator, and suggested prompts. No external AI service.
+- **Typing headlines**: About and CV headings type out live (paused when off-screen; static text shown for reduced-motion and no-JS).
+- **Interactive sections**: Skill wall and journey timeline show contextual tooltips / categories on hover or focus; stack chips and process cards respond to hover/focus.
+- **Contact form**: Locally validated (no backend — nothing is sent); shows a demo success state when valid.
 
 No framework or build step is required.

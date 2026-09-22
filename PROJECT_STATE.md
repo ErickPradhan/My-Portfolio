@@ -1,6 +1,6 @@
 # PROJECT_STATE.md — Erick Pradhan Portfolio (source of truth)
 
-Updated: 2026-09-22
+Updated: 2026-09-23
 
 ## What this project is
 
@@ -280,3 +280,87 @@ Scope: two tiny palette fixes only (per independent review). No redesign, no fea
 ### Status
 
 - V2-A (features + all three bug-fix passes) is complete, verified, and uncommitted in the working tree — **ready to commit** when the owner chooses.
+
+## V2-B interaction + UX polish pass (2026-09-22)
+
+Scope: interaction/UX polish only — keyboard-friendly interactive sections, typing headline effects, contextual skill/lab tooltips, a locally-validated contact form, and renaming the assistant to **Sheru** (the owner's dog). No redesign, no framework/dependency changes, no CV/PDF edits, no Vercel, no DNS/hosting changes, no content invention, no commit/push. Files touched: `index.html`, `styles.css`, `script.js`, `PROJECT_STATE.md`, `README.md`.
+
+### index.html
+
+- Added an inline SVG `symbol` `#sheru-icon` (round blue dog: ears, head, eyes, nose, smile) in `<body>`; reused via `<use href="#sheru-icon"/>` in the FAB, assistant header, and bot message bubbles (JS constant `SHERU_USE`).
+- Renamed the assistant: nav button "Ask Sheru ↗", FAB shows the Sheru avatar chip + "Ask Sheru", dialog header "SHERU · PAGE GUIDE", greeting rewritten as Sheru, footer note "Sheru · rule-based page helper · not connected to an external AI service." Palette search aliases now include `ask sheru`.
+- HOW I BUILD cards → `article.process-card.card-lift` (now focusable, neighbor-dim interaction).
+- Work section got a justified intro sentence; both "View Repository" links wrap the `↗` in `<span class="arr" aria-hidden="true">`.
+- About + CV `h2`s became typing headings (`data-type` + `.type-static` (screen-reader text) + `.type-render` (aria-hidden) + `.type-caret`). About types "I like turning complex ideas into working systems."; CV types "Want the full technical profile?".
+- Facts → `div.fact-card` (focusable).
+- Skill wall: `data-skill` on Machine Learning, Generative AI, LLM APIs, Data Analysis, Python, AWS, Raspberry Pi, Arduino Uno, IoT + `#skillContext` live region ("Hover or focus a skill to see how it shows up in my work.").
+- Journey items → `article.timeline-item.tl-item.reveal` (tabindex=0) with category labels.
+- AI Lab research slots → `div.lab-slot` (tabindex=0, `data-desc`) + `#labSlotNote` live region; terminal prompt upgraded to `erick@ai-lab:~/` with animated caret.
+- Contact section: real form (Name/Email/Subject/Message with per-field errors + `#contactSuccess` demo panel + `#cfReset`), and four icon-based contact links (mail / GitHub / LinkedIn / YouTube inline SVGs with aria-labels).
+- Palette hint keys now `#hintNav` / `#hintRun` / `#hintEsc` for the key-glow effect.
+
+### styles.css (appended block only — no rewrites)
+
+- `.palette-hint span.glow` key-glow pulse; `.process-card.card-lift` lift/accent line/`focus-visible`/neighbor de-emphasis; `.techs span` hover/focus glow; `.project-links a:hover` color + text-shadow (transform only on the `.arr` child, never the anchor — no tilt conflict); typing-heading classes (`.type-static` visible by default → visually hidden only under `.typing-on`) + caret blink; `.fact-card`; `.skill-cluster span` hover/focus/`.skill-hot` + `.skill-context`; timeline progress line + node dots + `.tl-cat`; `.lab-slot` hover/focus/`.lab-hot` + `.lab-slot-note`; stronger `.terminal-prompt` + `.term-caret`; whole new contact-form/success/link styles; Sheru avatar chip, message row layout + `msgIn` animation, `typing-dots`.
+
+### script.js (V2-B block appended)
+
+- **Assistant → Sheru**: `SHERU_USE` avatar markup, roomier bubble layout, visible typing indicator (`showTyping` = avatar + pulsing `···`), reply after 450 ms with epoch + open-state guards, `CHAT_MAX=80` cap.
+- **Palette hints**: `flashHint(id)` adds `.glow` for 420 ms (guarded by `prefers-reduced-motion`); wired to ArrowUp/Down (`hintNav`), Enter/click on Run (`hintRun`), Escape/close/overlay click (`hintEsc`).
+- **Typing effects**: single shared IntersectionObserver (threshold .35); TYPE → hold 5 s → clear → retype, only while visible; char pacing 30 ms every 5th char else 18 ms; `stop()` clears timers on leave; reduced-motion skips entirely (static text stays visible — also the no-JS and screen-reader fallback).
+- **Skill context**: truthful `skillMap` (e.g. Python → Diwali Sales Data Analysis, AWS → AWS Academy, Raspberry Pi / Arduino Uno → embedded lab experiments, IoT → IoT Smart Agriculture); unmapped skills fall back to their cluster; focus/hover + blur handlers restore the default line.
+- **Lab previews**: focus/hover on a slot shows its `data-desc` and marks it `.lab-hot`.
+- **Contact form**: local validation (name ≥2, email regex, subject ≥3, message ≥10; max lengths 80/120/120/2000), inline error text + `aria-invalid`, focus first invalid field; valid submit hides form and shows a mock success panel with an honest note; `#cfReset` restores everything. **No provider connected** — nothing is sent anywhere.
+- **Terminal**: history capped at 60 (longest-lived session only; output trim from V2-A unchanged).
+
+### Verification (this pass)
+
+1. `node --check script.js` — JS syntax OK.
+2. `verify_all.py` — **PASS** (HTML balance, JSON-LD, anchors, 7 local refs, CSS braces 400/400, no-js gate, CNAME/robots/sitemap/canonical/og apex, zero obsolete/Vercel/www URLs, assistant `aria-expanded`, menu focus, assistant epoch guard).
+3. V2-B runtime harness (Node `node:vm`, mock DOM + deterministic fake scheduler, executes the actual shipped code) — **ALL 36 CHECKS PASS**: flashHint glow adds/clears/leaves others alone + Run/Esc hints; palette filter + `focusin` recovery still live; typing render-complete/caret-on/shows 5 s idle-then-repeats/clears on hide/no runaway timers; skill cluster fallback + mapped context + blur restore; lab preview + `.lab-hot` + blur restore; form invalid-email flag + error text + valid submit hides form + reset restores; terminal output bounded at 60; assistant open + chat bubbles + typing indicator + bot reply + avatar markup + closed-ignores-input; reduced-motion fresh context shows static headings (no `typing-on`), flashHint no-op, no timers.
+4. Static greps: zero `vercel`/`www.erick` in site code; no `transform` on the `.project-links a` element itself (only child `.arr`) — no conflict with the card tilt animation; `prefers-reduced-motion` guards present; single canvas + single typing observer.
+5. No browser runtime testing possible in this environment (no browser installed) — validated by real-code execution in a mock DOM plus static reasoning; a manual browser smoke test is still recommended after deploy.
+
+### Status
+
+- V2-B is complete and verified in the working tree, alongside the still-uncommitted V2-A work (last commit `e56dcd8`). Not committed/pushed by design.
+- Known, intentional limitations: the contact form is a **demo** (no backend/provider — nothing is sent); Sheru remains a **rule-based** page helper with no external AI (footer says so); typing effects are visual-only with static fallback for reduced-motion/no-JS.
+
+## V2-B.1 (targeted visual + UX polish pass — 2026-09-23)
+
+Scope: **targeted polish only** — per-key palette hint glows, a slower (10 s) typing hold with a redesigned caret, a soft-glow floating quote, Mac-style console dots, a geometrically stable CV button, a re-ordered contact section (form primary, 2×2 icon links beneath), stricter name validation, and an email control that opens Gmail compose (mailto fallback). No framework/deps, no Vercel/DNS/hosting changes, no CV/PDF edits, no content invention, not committed/pushed by design.
+
+### index.html (targeted edits)
+
+- Mac console dots: the three `.console-bar` decoration dots (red / yellow / green) are purely cosmetic; each is a `<span aria-hidden="true">` so screen readers skip them — they are not interactive and carry no label/content.
+- Palette hint strip: per-key hint elements (up / down / run / esc) show a soft glow when the matching key is pressed; the glow is applied via a class toggle in script.js (exclusive + auto-clears), not via live-region announcements.
+- Contact section re-ordered: the form is the primary block; the 2x2 icon link grid (GitHub / LinkedIn / YouTube / email) sits beneath its fieldset.
+- Email control: the email icon link now opens Gmail compose in a new tab (https://mail.google.com/mail/?view=cm&fs=1&to=...) with a `mailto:` fallback when popups are blocked.
+- CV button: geometry made stable (fixed width/height/radius/padding) so the hover glow never shifts layout.
+
+### styles.css (appended block only — no rewrites of prior rules)
+
+- `.type-caret` redesigned as a thin soft block with a slower, softer blink.
+- `.quote-glow` soft-glow + gentle float animation for the farewell quote; `.console-bar span` dot colors (red/yellow/green) + hover lift; `.console-bar span` decorative.
+- `.cv-card .btn` fixed geometry (no layout shift on hover); `.contact-main` / `.contact-links` re-ordered layout (form primary, 2x2 icon links beneath).
+- Reduced-motion + no-JS overrides: every new effect is static / no-op under those conditions.
+
+### script.js (appended block only — no rewrites)
+
+- Per-key palette hint glow: flashHint() targets a single hint key per press (arrowup / arrowdown / enter / escape / run), glow is exclusive and auto-clears; reduced-motion => no-op.
+- Typing hold raised from 5 s (V2-B) to 10 s (10000 ms) so a finished sentence holds before idle-clear/restart; timers always cleaned on hidden/idle; reduced-motion shows static text (no timers).
+- Stricter name validation: nameRe = letters/spaces/hyphens/apostrophes only (no digits/symbols); per-field errors + aria-invalid toggled true/false; reduced-motion no-op.
+- Email control: opens Gmail compose URL in a new tab with `mailto:` fallback.
+
+### Verification (this pass)
+
+1. `node --check script.js` — syntax OK.
+2. `verify_all.py` — PASS (full static suite: HTML balance, JSON-LD, anchors, 7 local refs, CSS braces, no-JS gate, CNAME/robots/sitemap/canonical/og apex, zero Vercel/DNS/www-canonical URLs, assistant aria-expanded, menu focus, assistant epoch guard).
+3. V2-B.1 harness (node:vm mock-DOM + deterministic fake scheduler, executes the actual shipped script.js) — ALL CHECKS PASS: per-key hint glow exclusive + auto-clean; typing 10 s hold + idle restart + retype loop + no runaway; reduced-motion static/no-op/no timers; contact name/email/subject/message validation (incl. stricter name) + valid submit + reset; email Gmail compose URL + new-tab + fallback; terminal bound; assistant/chat/typing indicator/bot reply/avatar.
+4. Static reasoning on styles/index for mac dots aria-hidden, quote glow/float, caret redesign, CV geometry, contact re-order — all present. No browser runtime testing possible here (no browser installed) — validated via real-code execution in mock DOM + static suite; manual browser smoke test still recommended.
+
+### Status
+
+- V2-B.1 complete and verified in the working tree, alongside the still-uncommitted V2-A/V2-B work (last commit `e56dcd8`). Not committed/pushed by design.
+- Timing note: V2-B documented the typing hold as 5 s; V2-B.1 raises it to 10 s (current). The V2-B section above is historical and intentionally left as-is.
+- Known intentional limitations (unchanged): contact form is a demo (nothing sent); Sheru is rule-based with no external AI (footer says so); typing/quote/dots are visual-only with reduced-motion / no-JS static fallbacks.
