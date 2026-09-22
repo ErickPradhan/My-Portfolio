@@ -59,7 +59,7 @@ Notable absences (intentional): no `src/`, no `public/`, no `components/`, no `p
 ## Section inventory (index.html)
 
 1. Header / nav (`#main-content`, `#work`, `#about`, `#skills`, `#lab`, `#contact`) + "Ask Erick" button + mobile menu.
-2. Hero — portrait, name (`Erick Pradhan`), positioning line, two CTAs (Explore Work→#work, Connect→#contact), eyebrow "AI / ML ENGINEER · OPEN TO INTERNSHIPS", plus a "COMMANDS Ctrl+K" shortcut button and a small static status line. Portrait quote is Linus Torvalds: "Talk is cheap. Show me the code."
+2. Hero — portrait, name (`Erick Pradhan`), positioning line, two CTAs (Explore Work→#work, Connect→#contact), eyebrow "AI / ML ENGINEER · OPEN TO INTERNSHIPS", plus a "COMMANDS Ctrl+K" shortcut button and a small static status line. Portrait quote card displays the Michael Scott quote, while the portrait crossfades between the two portfolio images every 15 seconds.
 3. Ticker marquee — AI/ML/software/cloud/data/IoT phrase loop.
 4. Process — "HOW I BUILD" three cards (problem-first thinking, AI and data, systems that work).
 5. Work/projects — `SELECTED SYSTEMS`, two project cards (see below).
@@ -364,3 +364,9 @@ Scope: **targeted polish only** — per-key palette hint glows, a slower (10 s) 
 - V2-B.1 complete and verified in the working tree, alongside the still-uncommitted V2-A/V2-B work (last commit `e56dcd8`). Not committed/pushed by design.
 - Timing note: V2-B documented the typing hold as 5 s; V2-B.1 raises it to 10 s (current). The V2-B section above is historical and intentionally left as-is.
 - Known intentional limitations (unchanged): contact form is a demo (nothing sent); Sheru is rule-based with no external AI (footer says so); typing/quote/dots are visual-only with reduced-motion / no-JS static fallbacks.
+
+## Final targeted polish (2026-09-23)
+
+- Contact inputs and textarea retain the dark field appearance during Chrome/Edge autofill, with readable text and preserved focus styling.
+- The hero quote card now displays only the Michael Scott quote. The quote text is quoted separately from the em-dash attribution, and the card uses natural content height without a rotation timer.
+- The hero portrait now crossfades between `assets/images/Porfolio.jpg` and `assets/images/Porfolio1.jpg` every 15 seconds inside the existing fixed portrait frame, preserving the image dimensions and layout.

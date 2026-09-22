@@ -2,6 +2,45 @@ const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
 
 // Neural background
 const motionQuery=matchMedia("(prefers-reduced-motion: reduce)");
+const portraitSlides=[...$$(".portrait-slide")];
+if(portraitSlides.length>1){
+  let portraitIndex=0;
+  setInterval(()=>{
+    portraitSlides[portraitIndex].classList.remove("portrait-slide-active");
+    portraitIndex=(portraitIndex+1)%portraitSlides.length;
+    portraitSlides[portraitIndex].classList.add("portrait-slide-active");
+  },15000);
+}
+const portraitQuote=$(".portrait-quote");
+if(portraitQuote){
+  const quoteText=portraitQuote.querySelector("span"),quoteAuthor=portraitQuote.querySelector("cite");
+  const heroQuotes=[
+    ["&quot;That's what she said!&quot;","— Michael Scott"]
+  ];
+  let quoteIndex=0;
+  if(heroQuotes.length>1)setInterval(()=>{
+    quoteIndex=(quoteIndex+1)%heroQuotes.length;
+    const currentHeight=portraitQuote.offsetHeight;
+    portraitQuote.style.height=`${currentHeight}px`;
+    if(!motionQuery.matches)portraitQuote.classList.add("is-changing");
+    setTimeout(()=>{
+      quoteText.innerHTML=heroQuotes[quoteIndex][0];
+      quoteAuthor.textContent=heroQuotes[quoteIndex][1];
+      portraitQuote.style.height="auto";
+      const nextHeight=portraitQuote.offsetHeight;
+      if(motionQuery.matches){
+        portraitQuote.style.height="";
+        return;
+      }
+      portraitQuote.style.height=`${currentHeight}px`;
+      requestAnimationFrame(()=>{
+        portraitQuote.style.height=`${nextHeight}px`;
+        portraitQuote.classList.remove("is-changing");
+      });
+      setTimeout(()=>{portraitQuote.style.height=""},240);
+    },motionQuery.matches?0:220);
+  },7000);
+}
 const canvas=$("#network"),ctx=canvas.getContext("2d");let nodes=[],networkFrame;
 function resize(){canvas.width=innerWidth;canvas.height=innerHeight;nodes=Array.from({length:Math.min(55,Math.floor(innerWidth/25))},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22}))}
 function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);for(const n of nodes){n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>canvas.width)n.vx*=-1;if(n.y<0||n.y>canvas.height)n.vy*=-1;ctx.fillStyle="rgba(46,155,255,.45)";ctx.fillRect(n.x,n.y,1.5,1.5)}for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){let a=nodes[i],b=nodes[j],d=Math.hypot(a.x-b.x,a.y-b.y);if(d<145){ctx.strokeStyle=`rgba(46,155,255,${.08*(1-d/145)})`;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke()}}if(!motionQuery.matches)networkFrame=requestAnimationFrame(draw)}
