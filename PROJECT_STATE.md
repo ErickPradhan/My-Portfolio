@@ -12,7 +12,7 @@ Live domain: **https://erickpradhan.com.np**
 
 - `index.html` — complete page markup and all section content (single page, anchor navigation).
 - `styles.css` — full design system, layout, responsive rules, animations.
-- `script.js` — all interactions (network background canvas, scroll reveal, nav scroll-spy, mobile menu, magnetic/tilt effects, rule-based assistant, "matrix" easter egg).
+- `script.js` — all interactions (network background canvas, scroll reveal, nav scroll-spy, mobile menu, magnetic/tilt effects, rule-based assistant, command palette, local AI Lab terminal, "matrix" easter egg).
 - Static assets served from `assets/` by relative path.
 - No routing, no components, no build, no server, no API calls (except nothing — the assistant is fully local).
 
@@ -59,18 +59,19 @@ Notable absences (intentional): no `src/`, no `public/`, no `components/`, no `p
 ## Section inventory (index.html)
 
 1. Header / nav (`#main-content`, `#work`, `#about`, `#skills`, `#lab`, `#contact`) + "Ask Erick" button + mobile menu.
-2. Hero — portrait, name (`Erick Pradhan`), positioning line, two CTAs (Explore Work→#work, Connect→#contact), eyebrow "AI / ML ENGINEER · OPEN TO INTERNSHIPS". Portrait quote is Linus Torvalds: "Talk is cheap. Show me the code."
+2. Hero — portrait, name (`Erick Pradhan`), positioning line, two CTAs (Explore Work→#work, Connect→#contact), eyebrow "AI / ML ENGINEER · OPEN TO INTERNSHIPS", plus a "COMMANDS Ctrl+K" shortcut button and a small static status line. Portrait quote is Linus Torvalds: "Talk is cheap. Show me the code."
 3. Ticker marquee — AI/ML/software/cloud/data/IoT phrase loop.
 4. Process — "HOW I BUILD" three cards (problem-first thinking, AI and data, systems that work).
 5. Work/projects — `SELECTED SYSTEMS`, two project cards (see below).
 6. About — BSc at Islington College (London Met affiliate), build-first/learn-deep/ship-clean facts.
 7. Skills — 4 clusters + self-assessed meter.
 8. Timeline/journey — education, tutor experience, AWS Academy certifications.
-9. AI Lab — decorative terminal; research slots explicitly labeled EXPLORING / QUEUED (prototypes, not products).
+9. AI Lab — interactive terminal: decorative top region (research slots explicitly labeled EXPLORING / QUEUED — prototypes, not products) + real input form running local predefined commands (see V2-A below).
 10. CV — download card linking `assets/documents/Erick_Pradhan.pdf`.
 11. Contact — email / GitHub / LinkedIn / YouTube external links.
 12. Assistant panel — "PORTFOLIO ASSISTANT" dialog.
-13. Footer.
+13. Command palette overlay — `#paletteOverlay` dialog (Ctrl/Cmd+K), sits between the assistant panel and the footer in markup.
+14. Footer.
 
 ## Project cards & shown-work behavior
 
@@ -220,3 +221,62 @@ Not performed this pass: no real browser runtime testing (no browser available i
 3. Optionally delete `assets/reference/*` after confirming Git history retains the removed duplicates.
 4. Add a third project card only with real documented evidence (repo + PDF).
 5. Keep the assistant rule-based, or in a future iteration link it to a real service — never make it look like an LLM while it is not one.
+
+## V2-A targeted bug-fix pass (2026-09-22)
+
+Scope: only the two release-blocking command-palette bugs found by independent review, plus the optional terminal-output cap. No redesign, no new features, no dependency changes, no CV/PDF edits, no Vercel, no architecture/DNS changes. Files touched: `script.js` (all fixes), `PROJECT_STATE.md`, `README.md` (already documented V2-A in the prior pass).
+
+### Bug 1 — palette typeahead read the wrong dataset key (fixed)
+
+- **Bug:** `filterPalette()` called `li.dataset.search`, but `data-search` lives on the command **button** inside each `<li>` (`<button data-action=… data-search=…>`). `li.dataset.search` is `undefined`, so any non-empty query threw `TypeError: Cannot read properties of undefined (reading 'includes')` and broke filtering. (Empty query short-circuited via `!q`, so the palette only appeared to work when not typing.)
+- **Fix:** `filterPalette()` now reads `(btn.dataset.search || "").includes(q)` — the correct element and safely guarded. Command list, aliases, and markup unchanged.
+
+### Bug 2 — palette allowed Tab to escape the modal (fixed)
+
+- **Bug:** the palette has `role="dialog" aria-modal="true"` but no focus trap; pressing Tab on `#paletteInput` moved focus out of the overlay onto the page behind it.
+- **Fix:** added a lightweight keydown trap on `#paletteOverlay` (no library): it collects the palette's tabbable controls (`button,input` excluding `tabindex="-1"` command buttons), cycles Tab/Shift+Tab with wraparound, never advances past the overlay, and pulls focus back inside if it is ever outside or on a `tabindex="-1"` row. The command rows remain non-tab-stops (arrow keys select them), preserving the single-tab-stop combobox pattern.
+
+### Optional — terminal output cap (implemented)
+
+- Terminal output was unbounded (one echo + one result per command). Added `termTrim()` capping retained nodes at 60 (oldest removed first), called after echo and after result. History array (in-memory) untouched; `clear` still clears fully; visible UX unchanged.
+
+### Verification (this pass)
+
+1. `node --check script.js` — JS syntax OK.
+2. Existing project verification script — **PASS** (HTML balance, JSON-LD, anchors, 7 local refs, CSS braces, no-js gate, CNAME, robots, sitemap, canonical/og:url apex, no Vercel/www in site code, aria-expanded, menu focus, assistant epoch guard).
+3. Palette logic harness (Node, no browser): 8 commands parse from markup; empty query restores all; `work`/`proj`/`ask`/`resume`/`skill` aliases each filter to the correct single command; no-match → 0 visible; **no TypeError on non-empty queries**; source now uses `btn.dataset.search`.
+4. Focus-trap simulation (Node): Tab from close→input, input→close (wrap); Shift+Tab input→close, close→input (wrap); stray/focused-`tabindex="-1"` row and outside-palette focus both pulled back inside — focus can never escape.
+5. Regression checks by inspection: Ctrl/Cmd+K toggle intact; Escape priority palette→assistant→mobile-menu intact; palette-input Escape still `stopPropagation`; `closePalette()` still restores focus to `paletteOpener`; assistant Tab trap unchanged; mobile-menu focus return unchanged; terminal submit/history/clear logic unchanged (only the trim added).
+6. No browser runtime testing possible in this environment (no browser installed) — actual in-browser Tab/keyboard/Run behaviors were validated by logic simulation and static reasoning, not live runtime. Recommend a quick manual browser check after deploy.
+
+### Status
+
+- Command list unchanged. `index.html`/`styles.css` untouched by this pass (all fixes are in `script.js`).
+- Not committed/pushed; working tree contains prior V2-A work plus these fixes.
+- V2-A is now **ready to commit** once the owner is satisfied (still uncommitted by design per instructions).
+
+## V2-A final command-palette fix pass (2026-09-22)
+
+Scope: two tiny palette fixes only (per independent review). No redesign, no features, no dependency/architecture/DNS/CV changes. File touched: `script.js` (2 changes). Nothing committed/pushed.
+
+### Fix A — focus escape recovery (focusin containment)
+
+- **Bug:** the palette's Tab trap handled Tab/Shift+Tab traversal, but if focus landed on an element outside `#paletteOverlay` (e.g. clicking `.brand`, programmatic focus), it could remain outside the `aria-modal` dialog.
+- **Fix:** added a lightweight document-level `focusin` handler (no library): while the palette is open, any focus entering an element outside `#paletteOverlay` is immediately moved back to `#paletteInput` (the palette's intended focus target). The existing Tab/Shift+Tab keydown trap is kept for correct wraparound; Tab never leaves the dialog, and the `focusin` net is the recovery mechanism for anything that still lands outside. The `focusin` handler is inert when the palette is closed, so `closePalette()` restoring focus to `paletteOpener` is unaffected. Assistant trap and mobile menu untouched.
+
+### Fix B — clear stale active selection on no match
+
+- **Bug:** with zero visible results, `aria-activedescendant` was cleared, but the previously active hidden command could still keep `.active` and `aria-selected="true"`.
+- **Fix:** `setActivePalette()` no-match branch now resets `paletteIndex=0`, removes `.active` from every command, sets `aria-selected="false"` on every command, and empties `aria-activedescendant`. When matches return, `filterPalette()` re-establishes the first visible result as active. ArrowUp/ArrowDown/Enter behavior unchanged; arrows while nothing is visible are self-healing (index resets, nothing selected).
+
+### Verification (this pass)
+
+- `node --check script.js` — JS syntax OK.
+- Existing `verify_all.py` — **PASS** (HTML balance, JSON-LD, anchors, 7 local refs, CSS braces, no-js gate, CNAME/robots/sitemap/canonical/og apex, zero Vercel/www in site code, aria-expanded, menu focus, assistant epoch guard).
+- Node runtime harness executing the **actual shipped** `setActivePalette`/`filterPalette`/`visiblePaletteItems` and the extracted `focusin` listener via `node:vm` against mock DOMs: typeahead (`""`→all, `work`/`resume` → correct single match, no TypeError); no-match (all hidden, `aria-activedescendant` empty, `.active` cleared from every command, zero `aria-selected="true"`, empty-state shown, index reset 0); matches-return (first command active again); ArrowDown→item2 / ArrowUp→item1; ArrowDown over zero matches self-heals; focus-outside recovery (open + outside → input refocused; inside → left alone; closed → inert).
+- Prior-pass regression harness re-run — **PASS** (Tab/Shift+Tab wrap, Ctrl/Cmd+K, Escape priority, focus restore, assistant trap, mobile menu, terminal cap).
+- No browser runtime testing possible in this environment (no browser installed) — behaviors validated by real-code execution in a mock DOM plus static reasoning; a quick manual browser smoke test is still recommended after deploy.
+
+### Status
+
+- V2-A (features + all three bug-fix passes) is complete, verified, and uncommitted in the working tree — **ready to commit** when the owner chooses.

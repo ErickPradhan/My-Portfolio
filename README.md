@@ -42,8 +42,10 @@ GitHub Pages requires the `CNAME` file (with `erickpradhan.com.np`) at the repos
 4. Update the education, experience, certification, and assistant-answer content when your profile changes.
 5. After any content change, update `robots.txt`, `sitemap.xml`, and the canonical/Open Graph `og:image` URL if paths changed.
 
-## Notes on the assistant
+## Interactive features
 
-The "Ask Erick" panel is a **local rule-based assistant** (a static list of question patterns and answers in `script.js`). It does not call any external AI service or API. Keep it honest when editing: the site note "not connected to an external AI service" should stay true.
+- **Command palette**: Press `Ctrl/Cmd+K` (or click "COMMANDS Ctrl+K") to navigate sections and open the assistant.
+- **AI Lab terminal**: Local, rule-based terminal with `help`, `about`, `projects`, `skills`, `stack`, `lab`, `contact`, `github`, `clear`. No external AI service.
+- **Assistant**: Rule-based "Ask Erick" helper with honest scope note.
 
 No framework or build step is required.

@@ -53,7 +53,55 @@ function reply(q){q=q.toLowerCase();let a=answers.find(([r])=>r.test(q))?.[1]||"
 $("#chatForm").addEventListener("submit",e=>{e.preventDefault();if(!assistant.classList.contains("open"))return;let q=input.value.trim();if(!q)return;appendMessage(q,"user");input.value="";const epoch=assistantEpoch;setTimeout(()=>{if(epoch!==assistantEpoch||!assistant.classList.contains("open"))return;reply(q)},250)});
 $$(".suggestions button").forEach(b=>b.onclick=()=>{input.value=b.dataset.q;$("#chatForm").dispatchEvent(new Event("submit",{cancelable:true}))});
 assistant.addEventListener("keydown",e=>{if(e.key!=="Tab")return;const focusable=[...assistant.querySelectorAll("button,input")];const first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}});
-addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(assistant.classList.contains("open"))closeAI();else closeMobileMenu(true)});
+
+// Command palette (Ctrl/Cmd+K)
+const paletteOverlay=$("#paletteOverlay"),paletteInput=$("#paletteInput"),paletteList=$("#paletteList"),paletteHint=$("#paletteHint");
+const paletteItems=[...$$(".palette-item")],paletteEmpty=$("#paletteEmpty");
+let paletteOpener=null,paletteIndex=0;
+function visiblePaletteItems(){return paletteItems.filter(li=>!li.hidden)}
+function setPaletteOpen(open){paletteOverlay.classList.toggle("open",open);paletteOverlay.setAttribute("aria-hidden",String(!open));if(paletteHint)paletteHint.setAttribute("aria-expanded",String(open))}
+function setActivePalette(){const vis=visiblePaletteItems();if(!vis.length){paletteIndex=0;paletteItems.forEach(li=>{li.classList.remove("active");li.setAttribute("aria-selected","false")});paletteInput.setAttribute("aria-activedescendant","");return}paletteIndex=Math.min(Math.max(paletteIndex,0),vis.length-1);paletteItems.forEach(li=>{const on=vis[paletteIndex]===li;li.classList.toggle("active",on);li.setAttribute("aria-selected",String(on))});paletteInput.setAttribute("aria-activedescendant",vis[paletteIndex].id)}
+function filterPalette(){const q=paletteInput.value.trim().toLowerCase();let hits=0;paletteItems.forEach(li=>{const btn=li.querySelector("button");const match=!q||(btn.dataset.search||"").includes(q)||btn.textContent.toLowerCase().includes(q);li.hidden=!match;if(match)hits++});if(paletteEmpty)paletteEmpty.hidden=hits>0;paletteIndex=0;setActivePalette()}
+function openPalette(){if(assistant.classList.contains("open"))closeAI();paletteOpener=document.activeElement;paletteInput.value="";filterPalette();setPaletteOpen(true);paletteInput.focus()}
+function closePalette(){if(!paletteOverlay.classList.contains("open"))return;setPaletteOpen(false);if(paletteOpener)paletteOpener.focus()}
+function paletteRun(){const vis=visiblePaletteItems();const item=vis[paletteIndex];if(!item)return;const action=item.querySelector("button").dataset.action;closePalette();if(action==="assistant"){openAI();return}const target=action==="home"?document.getElementById("main-content"):document.getElementById(action);if(target)target.scrollIntoView({behavior:motionQuery.matches?"auto":"smooth",block:"start"})}
+paletteInput.addEventListener("input",filterPalette);
+paletteInput.addEventListener("keydown",e=>{if(e.key==="ArrowDown"){e.preventDefault();paletteIndex=Math.min(paletteIndex+1,visiblePaletteItems().length-1);setActivePalette()}else if(e.key==="ArrowUp"){e.preventDefault();paletteIndex=Math.max(paletteIndex-1,0);setActivePalette()}else if(e.key==="Enter"){e.preventDefault();paletteRun()}else if(e.key==="Escape"){e.preventDefault();e.stopPropagation();closePalette()}});
+paletteList.addEventListener("click",e=>{const btn=e.target.closest(".palette-item button");if(!btn)return;const li=btn.closest(".palette-item");const vis=visiblePaletteItems();paletteIndex=Math.max(0,vis.indexOf(li));paletteRun()});
+if(paletteHint)paletteHint.addEventListener("click",e=>{e.preventDefault();openPalette()});
+$("#paletteClose").addEventListener("click",closePalette);
+paletteOverlay.addEventListener("click",e=>{if(e.target===paletteOverlay)closePalette()});
+paletteOverlay.addEventListener("keydown",e=>{if(e.key!=="Tab")return;const stops=[...paletteOverlay.querySelectorAll("button,input")].filter(el=>el.getAttribute("tabindex")!=="-1");if(!stops.length){e.preventDefault();return}const first=stops[0],last=stops[stops.length-1];const cur=paletteOverlay.contains(document.activeElement)?document.activeElement:null;const idx=cur?stops.indexOf(cur):-1;if(e.shiftKey){e.preventDefault();(idx>0?stops[idx-1]:last).focus()}else{e.preventDefault();(idx>=0&&idx<stops.length-1?stops[idx+1]:first).focus()}});
+document.addEventListener("focusin",e=>{if(paletteOverlay.classList.contains("open")&&!paletteOverlay.contains(e.target))paletteInput.focus()});
+
+// AI Lab local interactive terminal (predefined, rule-based commands — no external AI)
+const termForm=$("#terminalForm"),termInput=$("#terminalInput"),termOut=$("#terminalOut");
+const termCmds={
+  help:"Commands: about, projects, skills, stack, lab, contact, github, clear. This is a local, rule-based demo terminal — no external AI service.",
+  about:"Erick Pradhan — AI/ML Engineer and BSc (Hons) Computing with Artificial Intelligence student at Islington College, in affiliation with London Metropolitan University. He builds practical AI, data, and software systems.",
+  projects:"Featured work: 1) IoT Smart Agriculture — ESP32 field system with automated irrigation, Blynk monitoring, and a 6-phase build verification (project document available). 2) Diwali Sales Data Analysis — 11,251 transactions, EDA with ANOVA (F = 2.477, p = 0.00166) and Chi-square (χ² = 1634.97) testing.",
+  skills:"AI / ML: Machine Learning, Generative AI, LLM APIs, AI Automation, Data Analysis. Engineering: Python, Java, JavaScript, SQL, REST APIs, React.js, Node.js, HTML/CSS. Data / Cloud: MySQL, MongoDB, Supabase, DynamoDB, AWS, Docker. Systems: Git/GitHub, Linux/WSL, Raspberry Pi, Arduino Uno, IoT.",
+  stack:"Core: Python, JavaScript, SQL, AWS (EC2, S3, Lambda, SageMaker, Comprehend), Docker, REST APIs, React.js, Node.js, MongoDB, MySQL. See the Skills section for the full wall with self-assessed focus areas.",
+  lab:"Four research slots are tracking experiments: LLM / RAG knowledge systems and AI automation (exploring), computer vision and edge AI (queued). This terminal is local — no external AI.",
+  contact:"Email: erickpradhan2@gmail.com. GitHub: github.com/ErickPradhan. LinkedIn: linkedin.com/in/erick-pradhan. YouTube: youtube.com/@DevBy-x8e.",
+  github:"github.com/ErickPradhan — public repos include Iot-Smart-Agricultural-System and DiwaliSales-DataAnalysis."
+};
+function termTrim(){while(termOut.children.length>60)termOut.children[0].remove()}
+function termEcho(cmd){const line=document.createElement("div");line.className="terminal-line";const p=document.createElement("span");p.className="terminal-prompt";p.setAttribute("aria-hidden","true");p.textContent="erick@ai-lab:~$";line.append(p,cmd);termOut.append(line);termTrim()}
+function termResult(key){const val=termCmds[key];const div=document.createElement("div");div.className=val?"terminal-result":"terminal-result terminal-error";div.textContent=val||`command not found: ${key} — type 'help' for available commands.`;termOut.append(div);termOut.scrollTop=termOut.scrollHeight;termTrim()}
+if(termForm&&termInput&&termOut){
+  const termHistory=[];let termHistIdx=0;
+  termForm.addEventListener("submit",e=>{e.preventDefault();const v=termInput.value.trim();termInput.value="";if(v)termHistory.push(v);termHistIdx=termHistory.length;termEcho(v);if(!v)return;const key=v.toLowerCase().split(/\s+/)[0];if(key==="clear"){termOut.replaceChildren();return}termResult(key)});
+  termInput.addEventListener("keydown",e=>{if((e.key!=="ArrowUp"&&e.key!=="ArrowDown")||!termHistory.length)return;e.preventDefault();termHistIdx+=e.key==="ArrowUp"?-1:1;termHistIdx=Math.max(0,Math.min(termHistIdx,termHistory.length));termInput.value=termHistIdx<termHistory.length?termHistory[termHistIdx]:""});
+}
+
+addEventListener("keydown",e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();paletteOverlay.classList.contains("open")?closePalette():openPalette();return}
+  if(e.key!=="Escape")return;
+  if(paletteOverlay.classList.contains("open")){closePalette();return}
+  if(assistant.classList.contains("open")){closeAI();return}
+  closeMobileMenu(true)
+});
 
 // Small keyboard Easter egg: type "matrix"
 let key="";addEventListener("keydown",e=>{key=(key+e.key.toLowerCase()).slice(-6);if(key==="matrix"){document.body.style.setProperty("--blue","#55ff88");setTimeout(()=>document.body.style.setProperty("--blue","#2e9bff"),3000)}});

@@ -64,6 +64,8 @@
           <span><b>ENG</b> Full-stack · Cloud · APIs</span>
           <span><b>LAB</b> IoT · Data · Experiments</span>
         </div>
+        <button class="hero-hint" id="paletteHint" type="button" aria-haspopup="dialog" aria-controls="paletteOverlay" aria-expanded="false">COMMANDS <kbd>Ctrl</kbd>+<kbd>K</kbd></button>
+        <div class="hero-snippet" aria-hidden="true"><span class="ts-prompt">$</span> erick --status <span class="ts-out">→ available · building &amp; exploring</span></div>
       </div>
       <div class="hero-portrait reveal">
         <div class="portrait-frame">
@@ -139,7 +141,7 @@
               <li>Alerts on high humidity / low moisture (buzzer) and low water level (Blynk notification)</li>
             </ul>
             <div class="techs"><span>ESP32</span><span>Arduino IDE</span><span>DHT11</span><span>HC-SR04</span><span>Soil Moisture</span><span>Blynk</span><span>IoT</span></div>
-            <details class="project-more">
+            <details class="project-more" name="project-more">
               <summary>Implementation &amp; verification <span class="plus">+</span></summary>
               <div class="more-body">
                 <div class="more-block"><b>Problem</b><p>Manual irrigation wastes water and gives farmers no real-time visibility into field conditions such as soil moisture or water-tank levels.</p></div>
@@ -168,7 +170,7 @@
               <li>Validates findings statistically — ANOVA and Chi-square hypothesis testing</li>
             </ul>
             <div class="techs"><span>Python</span><span>Pandas</span><span>NumPy</span><span>Matplotlib</span><span>SciPy</span><span>Jupyter Notebook</span></div>
-            <details class="project-more">
+            <details class="project-more" name="project-more">
               <summary>Implementation &amp; results <span class="plus">+</span></summary>
               <div class="more-body">
                 <div class="more-block"><b>Problem</b><p>Raw retail transaction data is hard to act on — without analysis, businesses miss customer segments, regional demand, and product trends.</p></div>
@@ -233,12 +235,17 @@
             <div><b>03</b><strong>COMPUTER VISION</strong><span>Visual intelligence</span><em>QUEUED</em></div>
             <div><b>04</b><strong>EDGE AI</strong><span>IoT + intelligence</span><em>QUEUED</em></div>
           </div>
-          <div class="terminal-line"><span>$</span> <i>await next_breakthrough()</i><b class="blink">_</b></div>
+          <p class="terminal-note">Local interactive terminal · predefined commands · no external AI.</p>
         </div>
+        <div class="terminal-out" id="terminalOut" role="log" aria-live="polite" aria-label="AI lab terminal output"></div>
+        <form class="terminal-form" id="terminalForm">
+          <span class="terminal-prompt" aria-hidden="true">erick@ai-lab:~$</span>
+          <input id="terminalInput" type="text" placeholder="type 'help'" aria-label="AI lab terminal command" autocomplete="off" spellcheck="false" maxlength="120">
+        </form>
       </div>
     </section>
 
-    <section class="section cv">
+    <section id="cv" class="section cv">
       <div class="cv-card reveal">
         <div><span class="eyebrow">06 / CV</span><h2>Want the full<br><em>technical profile?</em></h2><p>Download the latest CV for education, projects, technical skills, certifications, and experience.</p></div>
           <a class="btn primary magnetic" href="assets/documents/Erick_Pradhan.pdf" download>Download CV ↓</a>
@@ -266,6 +273,28 @@
     <div class="suggestions"><button type="button" data-q="What does Erick do?">What does he do?</button><button type="button" data-q="What are his AI skills?">AI skills</button><button type="button" data-q="Tell me about his projects">Projects</button></div>
     <p class="assistant-note">Rule-based page helper · not connected to an external AI service.</p>
     <form id="chatForm"><input id="chatInput" placeholder="Ask about Erick..." autocomplete="off" maxlength="300" aria-label="Ask Erick a question"><button type="submit" aria-label="Send question">↗</button></form>
+  </div>
+
+  <div class="palette-overlay" id="paletteOverlay" aria-hidden="true">
+    <div class="palette" role="dialog" aria-modal="true" aria-labelledby="paletteTitle">
+      <div class="palette-head">
+        <div class="palette-title" id="paletteTitle">Command palette</div>
+        <button class="palette-close" id="paletteClose" type="button" aria-label="Close command palette">×</button>
+      </div>
+      <input class="palette-input" id="paletteInput" role="combobox" aria-expanded="true" aria-controls="paletteList" aria-autocomplete="list" placeholder="Filter commands or sections…" autocomplete="off" spellcheck="false" maxlength="80">
+      <ul class="palette-list" id="paletteList" role="listbox" aria-label="Commands and sections">
+        <li class="palette-item" id="pi-home" role="option"><button type="button" data-action="home" data-search="home start top intro hero" tabindex="-1"><span>Go to</span><strong>Home</strong></button></li>
+        <li class="palette-item" id="pi-work" role="option"><button type="button" data-action="work" data-search="project projects portfolio case" tabindex="-1"><span>Go to</span><strong>Work</strong></button></li>
+        <li class="palette-item" id="pi-about" role="option"><button type="button" data-action="about" data-search="about engineer profile bio" tabindex="-1"><span>Go to</span><strong>About</strong></button></li>
+        <li class="palette-item" id="pi-skills" role="option"><button type="button" data-action="skills" data-search="skill stack tech tools language" tabindex="-1"><span>Go to</span><strong>Skills</strong></button></li>
+        <li class="palette-item" id="pi-lab" role="option"><button type="button" data-action="lab" data-search="lab ai lab terminal experiments research" tabindex="-1"><span>Go to</span><strong>AI Lab</strong></button></li>
+        <li class="palette-item" id="pi-cv" role="option"><button type="button" data-action="cv" data-search="cv resume curriculum vitae" tabindex="-1"><span>Go to</span><strong>CV</strong></button></li>
+        <li class="palette-item" id="pi-contact" role="option"><button type="button" data-action="contact" data-search="contact email connect reach" tabindex="-1"><span>Go to</span><strong>Contact</strong></button></li>
+        <li class="palette-item" id="pi-assistant" role="option"><button type="button" data-action="assistant" data-search="assistant ask chat ask erick" tabindex="-1"><span>Open</span><strong>Assistant</strong></button></li>
+        <li class="palette-empty" id="paletteEmpty" hidden>No matching commands.</li>
+      </ul>
+      <div class="palette-hint"><span><kbd>↑</kbd><kbd>↓</kbd> Navigate</span><span><kbd>↵</kbd> Run</span><span><kbd>Esc</kbd> Close</span></div>
+    </div>
   </div>
 
   <footer><span>ERICK PRADHAN</span><span>AI / ML ENGINEER</span><span>BUILT WITH CURIOSITY + CODE</span></footer>

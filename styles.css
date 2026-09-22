@@ -214,3 +214,48 @@ summary:focus-visible{outline:2px solid var(--blue2);outline-offset:4px}
 
 /* Project body readability bump for recruiter scanning. */
 main .project-body p{font-size:14px}
+
+/* V2-A — command palette, AI Lab terminal, hero shortcut. No frameworks, CSS only. */
+main section[id]{scroll-margin-top:96px}
+kbd{display:inline-block;min-width:18px;padding:2px 6px;border:1px solid rgba(255,255,255,.18);border-bottom-width:2px;border-radius:4px;background:rgba(255,255,255,.05);color:var(--blue2);font:600 10px "Space Grotesk",monospace;letter-spacing:.6px;text-align:center;cursor:pointer}
+
+.hero-hint{display:inline-flex;align-items:center;gap:10px;margin-top:22px;padding:7px 12px;background:rgba(46,155,255,.06);border:1px solid rgba(46,155,255,.28);border-radius:5px;color:#a9bdd3;font:600 11px "Space Grotesk";letter-spacing:1.6px;cursor:pointer;transition:border-color .2s ease,color .2s ease}
+.hero-hint kbd{background:rgba(5,7,10,.5)}
+.hero-hint:hover,.hero-hint:focus-visible{color:var(--blue2);border-color:rgba(116,194,255,.6)}
+.hero-snippet{display:flex;align-items:center;gap:9px;margin-top:14px;color:#5e6a78;font:500 12px "Space Grotesk",monospace}
+.hero-snippet .ts-prompt{color:var(--blue)}
+.hero-snippet .ts-out{color:var(--muted)}
+
+.palette-overlay{position:fixed;inset:0;z-index:70;display:flex;align-items:flex-start;justify-content:center;padding:12vh 20px 20px;background:rgba(5,7,10,.66);backdrop-filter:blur(6px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .18s ease,visibility 0s linear .18s}
+.palette-overlay.open{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .18s ease}
+.palette{width:min(560px,100%);background:var(--panel2);border:1px solid var(--line);border-radius:10px;box-shadow:0 24px 70px rgba(0,0,0,.5),0 0 40px rgba(46,155,255,.07)}
+.palette-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 10px}
+.palette-title{font:700 11px "Space Grotesk";letter-spacing:2px;color:var(--blue2);text-transform:uppercase}
+.palette-close{background:none;border:0;color:var(--muted);font-size:20px;line-height:1;cursor:pointer;padding:4px 8px;border-radius:4px}
+.palette-close:hover{color:var(--text)}
+.palette-input{display:block;width:100%;margin:0;padding:12px 18px;background:rgba(255,255,255,.03);border:0;border-bottom:1px solid var(--line);border-top:1px solid var(--line);color:var(--text);font-size:15px}
+.palette-input:focus{outline:0}
+.palette-list{list-style:none;margin:0;padding:8px;max-height:min(330px,44vh);overflow:auto}
+.palette-item{margin:0}
+.palette-item button{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;background:none;border:0;border-radius:6px;color:var(--muted);text-align:left;cursor:pointer}
+.palette-item button span{font:500 10px "Space Grotesk";letter-spacing:1.4px;text-transform:uppercase;color:#5e6a78}
+.palette-item button strong{color:var(--text);font:600 14px "Space Grotesk";letter-spacing:.2px}
+.palette-item.active button,.palette-item button:hover{background:rgba(46,155,255,.12)}
+.palette-item.active button strong,.palette-item button:hover strong{color:var(--blue2)}
+.palette-item.active button span{color:var(--blue2)}
+.palette-empty{margin:0;padding:14px 12px;color:var(--muted);font-size:13px;text-align:center}
+.palette-hint{display:flex;flex-wrap:wrap;gap:6px 18px;padding:10px 18px;border-top:1px solid var(--line);color:#5e6a78;font:500 11px "Space Grotesk";letter-spacing:.8px}
+.palette-hint span{display:flex;align-items:center;gap:7px}
+
+.console-content{padding:22px 24px 6px}
+.lab-grid{margin:20px 0 14px}
+.terminal-note{margin:4px 0 0;font:500 10px "Space Grotesk";letter-spacing:.8px;color:#5e6a78}
+.terminal-out{max-height:230px;overflow:auto;padding:12px 24px 6px;background:rgba(0,0,0,.28);border-top:1px solid var(--line);font:500 12px/1.75 "Space Grotesk",monospace;color:#aec3d6;scrollbar-width:thin}
+.terminal-line{color:#c9d4e0}
+.terminal-prompt{color:var(--blue);user-select:none}
+.terminal-result{white-space:pre-line;color:#aec3d6}
+.terminal-result.terminal-error{color:#ff9a9a}
+.terminal-form{display:flex;align-items:center;gap:10px;padding:12px 24px;font:500 12px "Space Grotesk",monospace}
+#terminalInput{flex:1;min-width:0;background:none;border:0;color:var(--text);caret-color:var(--blue);font:500 13px "Space Grotesk",monospace}
+#terminalInput:focus{outline:0}
+@media(max-width:560px){.hero-hint{margin-top:18px}.palette-overlay{padding:11vh 12px 12px}.palette-hint span:last-child{display:none}}
