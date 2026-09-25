@@ -3,7 +3,7 @@ const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
 // Neural background
 const motionQuery=matchMedia("(prefers-reduced-motion: reduce)");
 const portraitSlides=[...$$(".portrait-slide")];
-if(portraitSlides.length>1){
+if(portraitSlides.length>1&&!motionQuery.matches){
   let portraitIndex=0;
   setInterval(()=>{
     portraitSlides[portraitIndex].classList.remove("portrait-slide-active");
