@@ -45,7 +45,13 @@
       <a href="#lab">AI Lab</a>
       <a href="#contact">Contact</a>
     </nav>
-    <button class="nav-ai" id="openAssistant" type="button" aria-haspopup="dialog" aria-controls="assistant" aria-expanded="false">Ask Sheru <span>↗</span></button>
+    <div class="nav-actions">
+      <button class="nav-bell" id="openUpdates" type="button" aria-haspopup="dialog" aria-controls="updatesPanel" aria-expanded="false" aria-label="Updates — what is new and what I am working on">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 1 0-12 0c0 6.5-2.5 8-2.5 8h17S18 14.5 18 8"/><path d="M13.8 20a2.1 2.1 0 0 1-3.6 0"/></svg>
+        <span class="nav-bell-dot" id="bellDot" hidden></span>
+      </button>
+      <button class="nav-ai" id="openAssistant" type="button" aria-haspopup="dialog" aria-controls="assistant" aria-expanded="false">Ask Sheru <span>↗</span></button>
+    </div>
     <button class="menu" id="menuBtn" type="button" aria-label="Open menu" aria-controls="desktopNav" aria-expanded="false">☰</button>
   </header>
 
@@ -313,6 +319,27 @@
         <li class="palette-empty" id="paletteEmpty" hidden>No matching commands.</li>
       </ul>
       <div class="palette-hint"><span id="hintUp"><kbd>↑</kbd> Navigate</span><span id="hintDown"><kbd>↓</kbd> Navigate</span><span id="hintRun"><kbd>↵</kbd> Run</span><span id="hintEsc"><kbd>Esc</kbd> Close</span></div>
+    </div>
+  </div>
+
+  <div class="updates" id="updatesPanel" role="dialog" aria-modal="false" aria-labelledby="updatesTitle" aria-hidden="true" tabindex="-1">
+    <div class="updates-head">
+      <div class="updates-title" id="updatesTitle">Updates</div>
+      <button class="updates-close" id="closeUpdates" type="button" aria-label="Close updates">×</button>
+    </div>
+    <div class="updates-body">
+      <section class="updates-block" aria-labelledby="updatesCurrentTitle">
+        <h3 class="updates-sub" id="updatesCurrentTitle">Currently Working On</h3>
+        <div class="updates-current" id="updatesCurrent"></div>
+      </section>
+      <section class="updates-block" aria-labelledby="updatesRecentTitle">
+        <h3 class="updates-sub" id="updatesRecentTitle">Recent</h3>
+        <ul class="updates-list" id="updatesList"></ul>
+      </section>
+    </div>
+    <div class="updates-foot">
+      <button class="updates-readall" id="markAllRead" type="button">Mark all as read</button>
+      <span class="updates-count" id="updatesCount" aria-live="polite"></span>
     </div>
   </div>
 

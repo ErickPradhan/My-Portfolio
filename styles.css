@@ -417,3 +417,81 @@ kbd{display:inline-block;min-width:18px;padding:2px 6px;border:1px solid rgba(25
   .contact-links a{grid-template-columns:auto 1fr;padding:13px 12px}
   .contact-links svg{width:18px;height:18px}
 }
+
+/* ===== V2-C — ACTIVITY & CURRENT WORK =====
+   Notification bell + updates panel. Curated, portfolio-level content only.
+   Reuses the existing dark tokens and the command-palette panel treatment. */
+
+.nav-actions{display:flex;align-items:center;gap:10px}
+
+.nav-bell{position:relative;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0;background:transparent;border:1px solid var(--line);border-radius:5px;color:var(--muted);cursor:pointer;transition:color .2s ease,border-color .2s ease,background .2s ease}
+.nav-bell svg{width:19px;height:19px;display:block}
+.nav-bell:hover,.nav-bell:focus-visible,.nav-bell[aria-expanded="true"]{color:var(--blue2);border-color:rgba(46,155,255,.5);background:rgba(46,155,255,.08)}
+.nav-bell:focus-visible{outline:2px solid var(--blue2);outline-offset:2px}
+.nav-bell-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--blue);border:2px solid #0a0e13;box-shadow:0 0 10px var(--blue)}
+
+/* Panel — fixed, non-modal, scroll contained so it never overflows the viewport */
+.updates{position:fixed;z-index:60;top:68px;right:20px;width:min(380px,calc(100vw - 32px));max-height:min(580px,calc(100vh - 96px));display:flex;flex-direction:column;background:var(--panel2);border:1px solid var(--line);border-radius:10px;box-shadow:0 24px 70px rgba(0,0,0,.5),0 0 40px rgba(46,155,255,.07);opacity:0;visibility:hidden;pointer-events:none;transform:translateY(-8px);transition:opacity .18s ease,transform .18s ease,visibility 0s linear .18s}
+.updates.open{opacity:1;visibility:visible;pointer-events:auto;transform:none;transition:opacity .18s ease,transform .18s ease}
+.updates:focus{outline:none}
+.updates:focus-visible{outline:2px solid var(--blue2);outline-offset:2px}
+.updates-head{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px}
+.updates-title{font:700 11px "Space Grotesk";letter-spacing:2px;color:var(--blue2);text-transform:uppercase}
+.updates-close{background:none;border:0;color:var(--muted);font-size:20px;line-height:1;cursor:pointer;padding:4px 8px;border-radius:4px}
+.updates-close:hover{color:var(--text)}
+.updates-close:focus-visible{outline:2px solid var(--blue2);outline-offset:2px}
+.updates-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:0 8px 8px;scrollbar-width:thin}
+.updates-block+.updates-block{margin-top:6px}
+.updates-sub{margin:0;padding:10px 10px 8px;font:600 10px "Space Grotesk";letter-spacing:1.6px;text-transform:uppercase;color:#5e6a78}
+
+/* Currently working on */
+.upd-current-item{padding:12px 11px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.02)}
+.upd-current-item+.upd-current-item{margin-top:8px}
+.upd-current-item h4{margin:0 0 8px;font:600 13px "Space Grotesk";letter-spacing:.2px;color:var(--text)}
+.upd-current-item p{margin:8px 0 0;font-size:12.5px;line-height:1.6;color:var(--muted);text-align:justify;text-justify:inter-word}
+
+/* Optional progress — only rendered when a real value is supplied */
+.upd-bar{margin-top:10px;height:4px;border-radius:2px;background:rgba(255,255,255,.07);overflow:hidden}
+.upd-bar i{display:block;height:100%;border-radius:2px;background:linear-gradient(90deg,var(--blue),var(--blue2));box-shadow:0 0 10px rgba(46,155,255,.5)}
+
+/* Status pills */
+.upd-status{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.03);color:var(--muted);font:600 10px "Space Grotesk";letter-spacing:1.2px;text-transform:uppercase}
+.upd-status::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:0 0 auto}
+.upd-status[data-status="In Progress"]{color:#7ee0a8;border-color:rgba(126,224,168,.32);background:rgba(126,224,168,.08)}
+.upd-status[data-status="Completed"]{color:var(--blue2);border-color:rgba(116,194,255,.32);background:rgba(116,194,255,.08)}
+.upd-status[data-status="Planning"]{color:#c9b6f5;border-color:rgba(201,182,245,.28);background:rgba(201,182,245,.07)}
+.upd-status[data-status="On Hold"]{color:#f0c674;border-color:rgba(240,198,116,.28);background:rgba(240,198,116,.07)}
+.upd-status[data-status="Archived"]{color:#7f8b99}
+
+/* Recent updates list */
+.updates-list{list-style:none;margin:0;padding:0}
+.upd-item{display:flex;gap:11px;padding:12px 10px;border-radius:7px;transition:background .2s ease}
+.upd-item+.upd-item{border-top:1px solid rgba(255,255,255,.05)}
+.upd-item:hover{background:rgba(46,155,255,.07)}
+.upd-item.unread{background:rgba(46,155,255,.05);box-shadow:inset 2px 0 0 var(--blue)}
+.upd-ico{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;border:1px solid rgba(46,155,255,.3);background:rgba(46,155,255,.08);color:var(--blue2)}
+.upd-ico svg{width:14px;height:14px}
+.upd-main{min-width:0;flex:1}
+.upd-title{font:600 13px "Space Grotesk";letter-spacing:.2px;color:var(--text)}
+.upd-desc{margin:4px 0 0;font-size:12.5px;line-height:1.6;color:var(--muted);text-align:justify;text-justify:inter-word}
+.upd-meta{margin-top:7px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.upd-project{font:600 10px "Space Grotesk";letter-spacing:1.3px;text-transform:uppercase;color:#5e6a78}
+.upd-time{font:500 10px "Space Grotesk";letter-spacing:.8px;color:#556170}
+.upd-goal{display:inline-flex;align-items:center;gap:5px;font:600 10px "Space Grotesk";letter-spacing:1.2px;text-transform:uppercase;color:var(--blue);transition:color .2s ease}
+.upd-goal:hover{color:var(--blue2)}
+.upd-goal:focus-visible{outline:2px solid var(--blue2);outline-offset:2px}
+.upd-empty{margin:0;padding:14px 10px;color:var(--muted);font-size:13px;line-height:1.6}
+
+/* Footer */
+.updates-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 18px;border-top:1px solid var(--line)}
+.updates-readall{background:none;border:1px solid var(--line);border-radius:5px;padding:6px 11px;color:var(--muted);font:600 10px "Space Grotesk";letter-spacing:1.3px;text-transform:uppercase;cursor:pointer;transition:color .2s ease,border-color .2s ease}
+.updates-readall:hover{color:var(--blue2);border-color:rgba(46,155,255,.5)}
+.updates-readall:focus-visible{outline:2px solid var(--blue2);outline-offset:2px}
+.updates-readall[hidden]{display:none}
+.updates-count{font:500 10px "Space Grotesk";letter-spacing:.8px;color:#556170;text-align:right}
+
+@media(max-width:560px){
+  .updates{top:64px;right:8px;left:8px;width:auto;max-height:calc(100vh - 80px)}
+  .nav-actions{gap:8px}
+  .nav-bell{width:38px;height:38px}
+}

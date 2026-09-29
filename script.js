@@ -75,7 +75,7 @@ addEventListener("resize",()=>{if(innerWidth>=900)setMobileMenu(false)},{passive
 const assistant=$("#assistant"),chat=$("#chat"),input=$("#chatInput"),assistantTriggers=[$("#assistantFab"),$("#openAssistant")];let lastFocusedElement,assistantEpoch=0;
 const SHERU_USE='<svg class="sheru-avatar" aria-hidden="true"><use href="#sheru-icon"/></svg>';
 function setAssistantState(open){assistant.classList.toggle("open",open);assistant.setAttribute("aria-hidden",String(!open));assistantTriggers.forEach(b=>{if(b)b.setAttribute("aria-expanded",String(open))})}
-function openAI(){assistantEpoch++;setAssistantState(true);lastFocusedElement=document.activeElement;input.focus();const stale=chat.querySelector(".typing");if(stale)stale.remove()}
+function openAI(){if(updatesPanel&&updatesPanel.classList.contains("open"))closeUpdates();assistantEpoch++;setAssistantState(true);lastFocusedElement=document.activeElement;input.focus();const stale=chat.querySelector(".typing");if(stale)stale.remove()}
 function closeAI(){const wasOpen=assistant.classList.contains("open");assistantEpoch++;setAssistantState(false);const stale=chat.querySelector(".typing");if(stale)stale.remove();if(wasOpen&&lastFocusedElement)lastFocusedElement.focus()}
 $("#assistantFab").onclick=openAI;$("#openAssistant").onclick=openAI;$("#closeAssistant").onclick=closeAI;
 const answers=[
@@ -105,7 +105,7 @@ function visiblePaletteItems(){return paletteItems.filter(li=>!li.hidden)}
 function setPaletteOpen(open){paletteOverlay.classList.toggle("open",open);paletteOverlay.setAttribute("aria-hidden",String(!open));if(paletteHint)paletteHint.setAttribute("aria-expanded",String(open))}
 function setActivePalette(){const vis=visiblePaletteItems();if(!vis.length){paletteIndex=0;paletteItems.forEach(li=>{li.classList.remove("active");li.setAttribute("aria-selected","false")});paletteInput.setAttribute("aria-activedescendant","");return}paletteIndex=Math.min(Math.max(paletteIndex,0),vis.length-1);paletteItems.forEach(li=>{const on=vis[paletteIndex]===li;li.classList.toggle("active",on);li.setAttribute("aria-selected",String(on))});paletteInput.setAttribute("aria-activedescendant",vis[paletteIndex].id)}
 function filterPalette(){const q=paletteInput.value.trim().toLowerCase();let hits=0;paletteItems.forEach(li=>{const btn=li.querySelector("button");const match=!q||(btn.dataset.search||"").includes(q)||btn.textContent.toLowerCase().includes(q);li.hidden=!match;if(match)hits++});if(paletteEmpty)paletteEmpty.hidden=hits>0;paletteIndex=0;setActivePalette()}
-function openPalette(){if(assistant.classList.contains("open"))closeAI();paletteOpener=document.activeElement;paletteInput.value="";filterPalette();setPaletteOpen(true);paletteInput.focus()}
+function openPalette(){if(assistant.classList.contains("open"))closeAI();if(updatesPanel&&updatesPanel.classList.contains("open"))closeUpdates();paletteOpener=document.activeElement;paletteInput.value="";filterPalette();setPaletteOpen(true);paletteInput.focus()}
 function closePalette(){if(!paletteOverlay.classList.contains("open"))return;setPaletteOpen(false);if(paletteOpener)paletteOpener.focus()}
 function paletteRun(){flashHint("hintRun");const vis=visiblePaletteItems();const item=vis[paletteIndex];if(!item)return;const action=item.querySelector("button").dataset.action;closePalette();if(action==="assistant"){openAI();return}const target=action==="home"?document.getElementById("main-content"):document.getElementById(action);if(target)target.scrollIntoView({behavior:motionQuery.matches?"auto":"smooth",block:"start"})}
 paletteInput.addEventListener("input",filterPalette);
@@ -143,6 +143,7 @@ addEventListener("keydown",e=>{
   if(e.key!=="Escape")return;
   if(paletteOverlay.classList.contains("open")){closePalette();return}
   if(assistant.classList.contains("open")){closeAI();return}
+  if(updatesPanel&&updatesPanel.classList.contains("open")){closeUpdates();return}
   closeMobileMenu(true)
 });
 
@@ -232,3 +233,115 @@ emailCompose.forEach(a=>{
     e.preventDefault();
   });
 });
+
+// ===== V2-C — ACTIVITY & CURRENT WORK =====
+// Curated, portfolio-level content only. No backend, no build step, and no raw
+// git/infrastructure events ever reach the UI. To publish an update, add an entry
+// to UPDATES (or CURRENT_WORK) below — everything else is derived from it.
+
+// Currently working on. `progress` is optional and only rendered when set to a
+// real number, so no percentage is ever invented. Supported statuses:
+// "In Progress", "Completed", "Planning", "On Hold", "Archived".
+const CURRENT_WORK=[
+  {id:"cw-llm-rag",project:"LLM / RAG Knowledge Systems",status:"In Progress",note:"Exploring retrieval-augmented generation pipelines and LLM API calls over custom documents.",link:"#lab",progress:null},
+  {id:"cw-ai-automation",project:"AI Automation — Agentic Workflows",status:"In Progress",note:"Prototyping agentic workflows that compose LLM calls into small focused tools.",link:"#lab",progress:null},
+  {id:"cw-vision",project:"Computer Vision — Visual Intelligence",status:"Planning",note:"Queued for OpenCV and vision-model experiments.",link:"#lab",progress:null},
+  {id:"cw-edge",project:"Edge AI — IoT + Intelligence",status:"Planning",note:"Queued for running small models on edge hardware alongside the IoT field system.",link:"#lab",progress:null}
+];
+
+// Recent updates. `type` picks the icon: project | document | milestone | status | update | achievement
+const UPDATES=[
+  {id:"u-iot-doc-0929",type:"document",title:"Project Document Added",description:"Published the full project report for the IoT Smart Agriculture system — ESP32 firmware, sensor wiring, automated irrigation, and Blynk monitoring.",project:"IoT Smart Agriculture",date:"2026-09-29",link:"#work"},
+  {id:"u-cv-0929",type:"document",title:"CV Updated",description:"Refreshed the CV with current project work, technical skills, and certifications.",project:"Portfolio",date:"2026-09-29",link:"#cv"},
+  {id:"u-lab-0925",type:"milestone",title:"AI Lab & Page Features Added",description:"Added the AI Lab experiments section, an Ask Sheru page guide, and a Ctrl+K command palette.",project:"Portfolio",date:"2026-09-25",link:"#lab"},
+  {id:"u-hero-0923",type:"update",title:"Hero Presentation Refined",description:"Updated the hero portrait and overall page presentation for a cleaner first impression.",project:"Portfolio",date:"2026-09-23",link:"#main-content"},
+  {id:"u-publish-0922",type:"status",title:"Portfolio Published",description:"Published the portfolio on its own domain at erickpradhan.com.np.",project:"Portfolio",date:"2026-09-22",link:"#main-content"},
+  {id:"u-first-0921",type:"project",title:"First Projects Added",description:"Added the IoT Smart Agriculture system and the Diwali Sales Data Analysis project.",project:"Portfolio",date:"2026-09-21",link:"#work"}
+];
+
+const UPD_MAX=8;
+const UPD_ICONS={
+  project:'<path d="M12 5v14M5 12h14"/>',
+  document:'<path d="M14 3v5h5"/><path d="M6 3h8l5 5v13H6z"/>',
+  milestone:'<path d="m5 13 4 4L19 7"/>',
+  status:'<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',
+  update:'<path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v5h-5"/>',
+  achievement:'<path d="m12 4 2.4 5 5.6.8-4 3.9 1 5.5-5-2.7-5 2.7 1-5.5-4-3.9 5.6-.8z"/>'
+};
+
+const updatesPanel=$("#updatesPanel"),bellBtn=$("#openUpdates"),bellDot=$("#bellDot");
+const updatesCurrent=$("#updatesCurrent"),updatesList=$("#updatesList"),updatesCount=$("#updatesCount"),markAllBtn=$("#markAllRead");
+let updatesOpener=null;
+
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+// Dedupe by stable id, then newest first. Curated entries can't duplicate per edit,
+// but this keeps a repeated id from ever rendering twice.
+function dedupeById(list){const seen=new Set();return list.filter(e=>e&&e.id&&!seen.has(e.id)&&(seen.add(e.id),true))}
+function relTime(iso){const then=new Date(iso+"T00:00:00");if(isNaN(then))return"";const days=Math.floor((Date.now()-then.getTime())/864e5);if(days<=0)return"Today";if(days===1)return"Yesterday";if(days<7)return days+" days ago";if(days<14)return"1 week ago";if(days<31)return Math.floor(days/7)+" weeks ago";return then.toLocaleDateString("en-GB",{day:"numeric",month:"short"})}
+function statusPill(status){return status?`<span class="upd-status" data-status="${esc(status)}">${esc(status)}</span>`:""}
+
+const READ_KEY="ep.updates.seen";
+function loadSeen(){try{const v=JSON.parse(localStorage.getItem(READ_KEY)||"null");return Array.isArray(v)?v.filter(x=>typeof x==="string"):null}catch(e){return null}}
+function saveSeen(ids){try{localStorage.setItem(READ_KEY,JSON.stringify(ids))}catch(e){}}
+
+const updateEntries=dedupeById(UPDATES).sort((a,b)=>(b.date||"").localeCompare(a.date||"")).slice(0,UPD_MAX);
+const currentEntries=dedupeById(CURRENT_WORK);
+const currentIds=updateEntries.map(e=>e.id);
+let seen=loadSeen();
+// First visit: treat everything already published as seen so the bell starts quiet.
+if(seen===null){seen=currentIds.slice();saveSeen(seen)}
+const unreadCount=()=>currentIds.filter(id=>!seen.includes(id)).length;
+
+function renderCurrentWork(){
+  if(!currentEntries.length){updatesCurrent.innerHTML='<p class="upd-empty">Nothing in active development right now.</p>';return}
+  updatesCurrent.innerHTML=currentEntries.map(item=>{
+    const pct=Number(item.progress);
+    const bar=Number.isFinite(pct)&&pct>0?`<div class="upd-bar"><i style="width:${Math.min(100,Math.max(0,pct))}%"></i></div>`:"";
+    const link=item.link?`<a class="upd-goal" href="${esc(item.link)}">View <span aria-hidden="true">↗</span></a>`:"";
+    return `<article class="upd-current-item"><h4>${esc(item.project)}</h4>${statusPill(item.status)}${item.note?`<p>${esc(item.note)}</p>`:""}${bar}${link}</article>`;
+  }).join("");
+}
+function renderUpdates(){
+  if(!updateEntries.length){updatesList.innerHTML='<li class="upd-empty">No updates published yet.</li>';return}
+  updatesList.innerHTML=updateEntries.map(item=>{
+    const icon=`<span class="upd-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${UPD_ICONS[item.type]||UPD_ICONS.update}</svg></span>`;
+    const link=item.link?`<a class="upd-goal" href="${esc(item.link)}">Open <span aria-hidden="true">↗</span></a>`:"";
+    const unread=seen.includes(item.id)?"":" unread";
+    return `<li class="upd-item${unread}">${icon}<div class="upd-main"><div class="upd-title">${esc(item.title)}</div>${item.description?`<p class="upd-desc">${esc(item.description)}</p>`:""}<div class="upd-meta">${item.project?`<span class="upd-project">${esc(item.project)}</span>`:""}<span class="upd-time">${esc(relTime(item.date))}</span>${link}</div></div></li>`;
+  }).join("");
+}
+function renderBell(){
+  const n=unreadCount();
+  bellDot.hidden=n===0;
+  bellBtn.setAttribute("aria-label",n?`Updates — ${n} unread`:"Updates — what is new and what I am working on");
+  if(markAllBtn)markAllBtn.hidden=n===0;
+  if(updatesCount)updatesCount.textContent=n?`${n} unread`:"All caught up";
+}
+function markAllRead(){seen=currentIds.slice();saveSeen(seen);renderUpdates();renderBell()}
+function setUpdatesOpen(open){
+  updatesPanel.classList.toggle("open",open);
+  updatesPanel.setAttribute("aria-hidden",String(!open));
+  if(bellBtn)bellBtn.setAttribute("aria-expanded",String(open));
+  // Focus the panel itself rather than a child control: "Mark all as read" is
+  // hidden when there is nothing unread, and focusing a hidden element is a no-op.
+  if(open){renderUpdates();renderBell();updatesOpener=bellBtn||document.activeElement;updatesPanel.focus({preventScroll:true})}
+  else if(updatesOpener&&updatesOpener.isConnected){updatesOpener.focus();updatesOpener=null}
+}
+function openUpdates(){
+  if(paletteOverlay.classList.contains("open"))closePalette();
+  if(assistant.classList.contains("open"))closeAI();
+  setMobileMenu(false);
+  setUpdatesOpen(true);
+}
+function closeUpdates(){setUpdatesOpen(false)}
+
+if(updatesPanel&&bellBtn){
+  renderCurrentWork();renderUpdates();renderBell();
+  bellBtn.addEventListener("click",()=>updatesPanel.classList.contains("open")?closeUpdates():openUpdates());
+  $("#closeUpdates").addEventListener("click",closeUpdates);
+  if(markAllBtn)markAllBtn.addEventListener("click",markAllRead);
+  // Following an in-panel link navigates the page, so close the panel.
+  updatesPanel.addEventListener("click",e=>{if(e.target.closest(".upd-goal"))closeUpdates()});
+  document.addEventListener("click",e=>{if(!updatesPanel.contains(e.target)&&!bellBtn.contains(e.target))closeUpdates()});
+  updatesPanel.addEventListener("keydown",e=>{if(e.key==="Escape"){e.stopPropagation();closeUpdates()}});
+}
