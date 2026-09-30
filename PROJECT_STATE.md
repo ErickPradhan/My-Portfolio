@@ -435,3 +435,45 @@ Two suites, both green. Unlike earlier passes this ran the **real shipped code i
 ### Status
 
 Uncommitted in the working tree. `git status` shows only `script.js`, `styles.css`, `README.md`, `PROJECT_STATE.md`. Not committed/pushed by design. The live site still runs the previous version until this is committed and deployed.
+
+---
+
+## V2-E — Notification hardening (2026-09-30)
+
+Follow-up to an independent review of `05f4c1e`, which found four defects. **Scope unchanged** — notification expiry and read state only. No project-card work, no `CURRENT_WORK` change, no backend, no dependencies, no UI redesign. `index.html` and `styles.css` are untouched by this pass. New commit on top of `05f4c1e`; the reviewed checkpoint is left intact (not amended).
+
+### 1. `seen` could stay `null` and throw
+
+`loadSeen()` returned `null` for a missing *or* corrupt key, but only the "never stored" case was safe. With a valid `ep.updates.known` and a missing/corrupt `seen`, the old init block reached `seen.slice()` and threw a `TypeError` during script evaluation — which killed notification initialisation entirely. When the new-id branch was not taken it was worse and quieter: `seen` stayed `null` and the next `seen.includes(...)` in `unreadCount()` or `renderUpdates()` threw instead.
+
+- `normalizeIds()` now coerces any stored value — missing key, malformed JSON, non-array, nested junk — to a de-duplicated array of plain id strings, and never returns `null`. `seen` is normalised at load, before any unread or render logic touches it.
+- The init block no longer round-trips through a nullable `seen`; the returning-visitor branch only records the baseline and leaves existing read state alone.
+- A returning visitor whose read state is lost is **repaired from their own last-visit baseline** (`known`), so their earlier updates stay read and only genuinely new ids light the bell. Previously this was either a hard throw or would have lit every row. `known` still returns `null` for "never stored / unreadable", because `null` is what marks a first visit and a corrupt value must not be mistaken for a real previous visit.
+
+### 2. Expired ids were pruned from `seen` but not `known`
+
+`ep.updates.known` could accumulate retired ids forever. `pruneStoredIds()` now prunes non-active ids from **both** keys, on load and on every refresh.
+
+Correctness of new-notification detection is preserved, and pruning `known` is in fact what makes id reuse behave correctly: once a retired id is gone from the baseline, a genuinely new update that reuses it is treated as unseen (unread) rather than as already-known. Existing notifications are unaffected — verified that expiring one entry does not make any other entry unread.
+
+### 3. Open panel did not refresh at the expiry boundary
+
+Expiry was only re-checked on load, on panel open, and on tab return, so an update that lapsed as the local date rolled over could stay visible in an already-open panel.
+
+- `armExpiryTimer()` schedules **one** `setTimeout` at the next boundary — midnight after the soonest active entry's `expiresAt`, since expiry is inclusive of its final day. It is not a poll.
+- Armed from `refreshUpdates()`, so it re-arms on every refresh. Clamped to the 32-bit `setTimeout` range so a far-future boundary cannot overflow into an immediate fire.
+- `clearExpiryTimer()` runs when the panel closes and on `pagehide`. Nothing is armed while the panel is closed, so an idle page holds no timer.
+
+### 4. `parseDay()` accepted impossible calendar dates
+
+The old parser only checked the `YYYY-MM-DD` *shape* and let the engine normalise the rest. Confirmed on this engine: `2026-02-31` became 3 March 2026 and `2026-02-29` became 1 March 2026 — both would have silently given an update the wrong lifetime.
+
+`parseDay()` now re-checks the parsed year/month/day against the input components and returns `null` on any mismatch, routing the entry to the documented 30-day fallback. Valid dates, inclusive expiry, and real leap days (`2024-02-29`) are unaffected; `2026-02-29` is correctly rejected.
+
+### Verification — V2-E (2026-09-30)
+
+`node --check script.js` **PASS**. `git diff --check` **clean** (no whitespace/conflict damage). Full V2-D suite re-run plus 15 focused cases — **all green**, 0 console errors, no regression to unrelated features. See the commit body for the per-scenario counts.
+
+### Status
+
+Committed as a new commit on top of `05f4c1e`. Not pushed.

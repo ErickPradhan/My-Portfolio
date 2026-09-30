@@ -291,7 +291,11 @@ function publishedOf(e){return String(e&&(e.publishedAt||e.date)||"")}
 // Parse "YYYY-MM-DD" as local midnight (ISO date strings would parse as UTC and can
 // land on the previous day). Returns null when absent or malformed, which routes the
 // entry to the default lifetime below rather than retiring it on a bad date string.
-function parseDay(iso){const s=String(iso||"").trim();if(!/^\d{4}-\d{2}-\d{2}/.test(s))return null;const d=new Date(s.slice(0,10)+"T00:00:00");return isNaN(d)?null:d}
+// The components are re-checked against the parsed Date because the engine silently
+// rolls impossible dates over ("2026-02-31" becomes 3 March, "2026-02-29" becomes 1
+// March), which would quietly give an update the wrong lifetime. Rejecting them routes
+// them to the documented fallback instead. Leap days that really exist still parse.
+function parseDay(iso){const s=String(iso||"").trim();if(!/^\d{4}-\d{2}-\d{2}/.test(s))return null;const y=+s.slice(0,4),m=+s.slice(5,7),d=+s.slice(8,10);const dt=new Date(y,m-1,d);return isNaN(dt)||dt.getFullYear()!==y||dt.getMonth()!==m-1||dt.getDate()!==d?null:dt}
 // Today's local midnight, so an entry stays visible through the whole of its expiry day.
 function todayDay(){const n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())}
 function addDays(day,n){const d=new Date(day.getTime());d.setDate(d.getDate()+n);return d}
@@ -309,9 +313,15 @@ function statusPill(status){return status?`<span class="upd-status" data-status=
 
 const READ_KEY="ep.updates.seen";
 const UPDATES_KEY="ep.updates.known";
-function loadSeen(){try{const v=JSON.parse(localStorage.getItem(READ_KEY)||"null");return Array.isArray(v)?v.filter(x=>typeof x==="string"):null}catch(e){return null}}
+// localStorage is untrusted input, so every stored value goes through this. It coerces
+// anything (missing key, malformed JSON, non-array, nested junk) to a de-duplicated array
+// of plain id strings. Never returns null, so read state can never become un-callable.
+function normalizeIds(v){if(!Array.isArray(v))return[];return[...new Set(v.filter(x=>typeof x==="string"&&x))]}
+function loadSeen(){try{return normalizeIds(JSON.parse(localStorage.getItem(READ_KEY)||"null"))}catch(e){return[]}}
 function saveSeen(ids){try{localStorage.setItem(READ_KEY,JSON.stringify(ids))}catch(e){}}
-function loadKnown(){try{const v=JSON.parse(localStorage.getItem(UPDATES_KEY)||"null");return Array.isArray(v)?v.filter(x=>typeof x==="string"):null}catch(e){return null}}
+// `known` keeps returning null for "never stored / unreadable" because null is what marks
+// a first visit, and a corrupt value must not be mistaken for a real previous visit.
+function loadKnown(){try{const v=JSON.parse(localStorage.getItem(UPDATES_KEY)||"null");return Array.isArray(v)?v.filter(x=>typeof x==="string"&&x):null}catch(e){return null}}
 function saveKnown(ids){try{localStorage.setItem(UPDATES_KEY,JSON.stringify(ids))}catch(e){}}
 
 let now0=todayDay();
@@ -322,21 +332,58 @@ function activeUpdateEntries(now){
 let updateEntries=activeUpdateEntries(now0);
 const currentEntries=dedupeById(CURRENT_WORK);
 let currentIds=updateEntries.map(e=>e.id);
-let seen=loadSeen();
-// Expired ids are dropped from stored read state too, so the list stays bounded and a
-// retired update can never resurface as unread if its id is ever reused.
-if(seen&&seen.some(id=>!currentIds.includes(id))){seen=seen.filter(id=>currentIds.includes(id));saveSeen(seen)}
+// Normalised on load, so `seen` is always a real array: a missing or corrupt key can no
+// longer leave it null and throw inside the unread count or a row render below.
+let seen=normalizeIds(loadSeen());
+// Drops ids that are no longer active from BOTH stored collections. Pruning `seen` keeps
+// the read list bounded; pruning `known` does the same for the previous-visit baseline,
+// and is what lets a genuinely new update that reuses a retired id count as new — the id
+// is gone from the baseline, so it is treated as unseen rather than as already known.
+function pruneStoredIds(){
+  let changed=false;
+  if(seen.some(id=>!currentIds.includes(id))){seen=seen.filter(id=>currentIds.includes(id));changed=true}
+  const k=loadKnown();
+  if(k&&k.some(id=>!currentIds.includes(id))){saveKnown(k.filter(id=>currentIds.includes(id)));changed=true}
+  if(changed)saveSeen(seen);
+  return changed;
+}
 // Returned visitors get a bell dot for anything published since their last visit; the
 // feed is rendered from data on every load, so nothing is ever duplicated.
 const known=loadKnown();
 const isFirstVisit=known===null;
-if(isFirstVisit||!currentIds.every(id=>known.includes(id))){
-  seen=isFirstVisit?currentIds.slice():seen.slice();
-  saveSeen(seen);
-  saveKnown(currentIds);
-}
+// Prune first, so the baseline read below is already free of expired ids.
+let dirty=pruneStoredIds();
+// A returning visitor whose read state is missing or corrupt is repaired from their own
+// previous-visit baseline rather than being treated as a first visit, so updates they had
+// already seen stay read and only genuinely new ones light the bell.
+if(!isFirstVisit&&!seen.length&&known.length){seen=known.filter(id=>currentIds.includes(id));dirty=true}
 // First visit: treat everything already published as seen so the bell starts quiet.
+// Returning visitor: existing read state is left alone and only the baseline is recorded,
+// so previously read updates stay read and only genuinely new ids light the bell.
+if(isFirstVisit){seen=currentIds.slice();saveKnown(currentIds);dirty=true}
+else if(!currentIds.every(id=>known.includes(id))){saveKnown(currentIds);dirty=true}
+if(dirty)saveSeen(seen);
 const unreadCount=()=>currentIds.filter(id=>!seen.includes(id)).length;
+// One-shot timer aimed at the next expiry boundary. While the panel is open this drops a
+// lapsed update the moment its expiry day ends, instead of waiting for the next open or
+// tab-return check. It is not a poll: exactly one timer exists, it re-arms from
+// refreshUpdates, and it is cleared when the panel closes and on page unload.
+let expiryTimer=null;
+function clearExpiryTimer(){if(expiryTimer){clearTimeout(expiryTimer);expiryTimer=null}}
+function armExpiryTimer(){
+  clearExpiryTimer();
+  if(!updatesPanel||!updatesPanel.classList.contains("open"))return;
+  // Entries are inclusive of their expiry day, so the boundary is midnight after it.
+  const next=updateEntries.reduce((min,e)=>{
+    const exp=expiryOf(e,now0);
+    if(!exp)return min;
+    const at=addDays(exp,1).getTime();
+    return at>Date.now()&&(min===null||at<min)?at:min;
+  },null);
+  if(next===null)return;
+  // Clamped to the 32-bit setTimeout range; the timer re-arms for the next boundary.
+  expiryTimer=setTimeout(()=>{expiryTimer=null;refreshUpdates()},Math.min(next-Date.now(),2147483647));
+}
 // Re-applies the expiry filter and re-renders, so an update that lapses while the tab
 // is idle disappears on its own instead of lingering until the next full page load.
 function refreshUpdates(){
@@ -344,8 +391,9 @@ function refreshUpdates(){
   updateEntries=activeUpdateEntries(today);
   now0=today;
   currentIds=updateEntries.map(e=>e.id);
-  if(seen.some(id=>!currentIds.includes(id))){seen=seen.filter(id=>currentIds.includes(id));saveSeen(seen)}
+  pruneStoredIds();
   renderUpdates();renderBell();
+  armExpiryTimer();
 }
 
 function renderCurrentWork(){
@@ -407,7 +455,7 @@ function setUpdatesOpen(open){
   // Focus the panel itself rather than a child control: "Mark all as read" is
   // hidden when there is nothing unread, and focusing a hidden element is a no-op.
   if(open){refreshUpdates();updatesOpener=bellBtn||document.activeElement;updatesPanel.focus({preventScroll:true})}
-  else if(updatesOpener&&updatesOpener.isConnected){updatesOpener.focus();updatesOpener=null}
+  else{clearExpiryTimer();if(updatesOpener&&updatesOpener.isConnected){updatesOpener.focus();updatesOpener=null}}
 }
 function openUpdates(){
   if(paletteOverlay.classList.contains("open"))closePalette();
@@ -439,6 +487,9 @@ if(updatesPanel&&bellBtn){
   document.addEventListener("click",e=>{if(!updatesPanel.contains(e.target)&&!bellBtn.contains(e.target))closeUpdates()});
   updatesPanel.addEventListener("keydown",e=>{if(e.key==="Escape"){e.stopPropagation();closeUpdates()}});
   // A notification that lapses while the tab sits idle drops out of the panel and out of
-  // the unread count on the next check (on page load, on panel open, and on tab return).
+  // the unread count on the next check (on page load, on panel open, on tab return, and
+  // at the expiry boundary itself while the panel is open).
   document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")refreshUpdates()});
+  // The boundary timer exists only to serve an open panel, so it is cleared on unload.
+  window.addEventListener("pagehide",clearExpiryTimer);
 }

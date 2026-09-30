@@ -61,7 +61,9 @@ Every notification carries its own lifetime, so nothing depends on a blanket "30
 - `publishedAt` — the day the update went live (also what the relative timestamp is measured from). The legacy field name `date` is still accepted.
 - `expiresAt` — the **last day** the update stays in the panel. Omit it and `DEFAULT_LIFETIME_DAYS` (30) is applied to `publishedAt` instead.
 
-An update whose `expiresAt` has passed is filtered out *before* rendering, so it can never appear in the list and can never count towards the unread badge. Expiry is re-checked on page load, every time the panel is opened, and when the tab becomes visible again, so a notification that lapses while the tab sits idle disappears on its own. Each active row also shows a factual "N days left" / "Expires today" label derived from its own stored expiry — that is a countdown to the expiry date, not a progress percentage.
+An update whose `expiresAt` has passed is filtered out *before* rendering, so it can never appear in the list and can never count towards the unread badge. Expiry is re-checked on page load, every time the panel is opened, when the tab becomes visible again, and — while the panel is already open — by a single one-shot timer aimed at the next expiry boundary, so a notification that lapses as the date rolls over disappears without waiting for another trigger. That timer is not a poll: exactly one is ever armed, it re-arms from the same refresh path, and it is cleared when the panel closes and on page unload. Each active row also shows a factual "N days left" / "Expires today" label derived from its own stored expiry — that is a countdown to the expiry date, not a progress percentage.
+
+Dates are validated as real calendar days, and `expiresAt` is inclusive — an update stays visible through the whole of its final day. A malformed or impossible date (for example `2026-02-31`, which JavaScript would otherwise roll over to 3 March) is rejected and the update falls back to the 30-day default rather than silently getting the wrong lifetime. Real leap days such as `2024-02-29` are accepted.
 
 ### Read / unread
 
@@ -71,6 +73,8 @@ The unread dot reflects updates published since the visitor's last visit. Read s
 - `ep.updates.known` — the id set that existed on their last visit. Compared against the live list so only genuinely new ids light up the bell; expired ids are pruned from both keys so the stored lists stay bounded.
 
 On a first-ever visit everything already published is treated as read, so the bell starts quiet. Read state does not sync across devices and resets if site data is cleared.
+
+`localStorage` is treated as untrusted input. A missing, malformed, or non-array value is normalised instead of being trusted, so the panel always renders — a returning visitor whose read state was lost is repaired from their own last-visit baseline (their earlier updates stay read, only genuinely new ones light the bell) rather than being mistaken for a first visit or lighting every row. Pruning `known` is also what makes a *new* update that reuses a retired id behave like a new update instead of a stale one.
 
 ## Interactive features
 
