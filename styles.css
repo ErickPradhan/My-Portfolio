@@ -490,6 +490,15 @@ kbd{display:inline-block;min-width:18px;padding:2px 6px;border:1px solid rgba(25
 .updates-readall[hidden]{display:none}
 .updates-count{font:500 10px "Space Grotesk";letter-spacing:.8px;color:#556170;text-align:right}
 
+/* Notification lifetime — a factual "how long this stays" label, never a percentage */
+.upd-life{font:500 10px "Space Grotesk";letter-spacing:.8px;color:#556170;opacity:.8}
+.upd-life::before{content:"· "}
+
+/* Single-notification read control. Only rendered while the item is unread. */
+.upd-markread{background:none;border:1px solid var(--line);border-radius:999px;padding:3px 9px;color:#5e6a78;font:600 9px "Space Grotesk";letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;transition:color .2s ease,border-color .2s ease}
+.upd-markread:hover{color:var(--blue2);border-color:rgba(46,155,255,.45)}
+.upd-markread:focus-visible{outline:2px solid var(--blue2);outline-offset:2px}
+
 @media(max-width:560px){
   .updates{top:64px;right:8px;left:8px;width:auto;max-height:calc(100vh - 80px)}
   .nav-actions{gap:8px}

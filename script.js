@@ -250,13 +250,22 @@ const CURRENT_WORK=[
 ];
 
 // Recent updates. `type` picks the icon: project | document | milestone | status | update | achievement
+// Every entry carries an explicit lifetime:
+//   publishedAt — YYYY-MM-DD the update went live (rendered as the relative time)
+//   expiresAt   — YYYY-MM-DD the last day the update stays in the panel; omitted = never expires.
+// Each update chooses its own lifetime, so nothing relies on a blanket "30 days" rule.
+// DEFAULT_LIFETIME_DAYS applies only when an entry gives no explicit expiresAt.
+// Keep this feed low-noise: new projects, major features, milestones, certifications and
+// achievements only — not styling tweaks, spacing passes, typo fixes or internal refactors.
+const DEFAULT_LIFETIME_DAYS=30;
 const UPDATES=[
-  {id:"u-iot-doc-0929",type:"document",title:"Project Document Added",description:"Published the full project report for the IoT Smart Agriculture system — ESP32 firmware, sensor wiring, automated irrigation, and Blynk monitoring.",project:"IoT Smart Agriculture",date:"2026-09-29",link:"#work"},
-  {id:"u-cv-0929",type:"document",title:"CV Updated",description:"Refreshed the CV with current project work, technical skills, and certifications.",project:"Portfolio",date:"2026-09-29",link:"#cv"},
-  {id:"u-lab-0925",type:"milestone",title:"AI Lab & Page Features Added",description:"Added the AI Lab experiments section, an Ask Sheru page guide, and a Ctrl+K command palette.",project:"Portfolio",date:"2026-09-25",link:"#lab"},
-  {id:"u-hero-0923",type:"update",title:"Hero Presentation Refined",description:"Updated the hero portrait and overall page presentation for a cleaner first impression.",project:"Portfolio",date:"2026-09-23",link:"#main-content"},
-  {id:"u-publish-0922",type:"status",title:"Portfolio Published",description:"Published the portfolio on its own domain at erickpradhan.com.np.",project:"Portfolio",date:"2026-09-22",link:"#main-content"},
-  {id:"u-first-0921",type:"project",title:"First Projects Added",description:"Added the IoT Smart Agriculture system and the Diwali Sales Data Analysis project.",project:"Portfolio",date:"2026-09-21",link:"#work"}
+  {id:"u-notify-0930",type:"update",title:"Notifications Added",description:"Stay updated with the latest portfolio projects, achievements, and improvements.",project:"Portfolio",publishedAt:"2026-09-30",expiresAt:"2026-10-30",link:"#work"},
+  {id:"u-iot-doc-0929",type:"document",title:"Project Document Added",description:"Published the full project report for the IoT Smart Agriculture system — ESP32 firmware, sensor wiring, automated irrigation, and Blynk monitoring.",project:"IoT Smart Agriculture",publishedAt:"2026-09-29",expiresAt:"2026-12-28",link:"#work"},
+  {id:"u-cv-0929",type:"document",title:"CV Updated",description:"Refreshed the CV with current project work, technical skills, and certifications.",project:"Portfolio",publishedAt:"2026-09-29",expiresAt:"2026-12-28",link:"#cv"},
+  {id:"u-lab-0925",type:"milestone",title:"AI Lab & Page Features Added",description:"Added the AI Lab experiments section, an Ask Sheru page guide, and a Ctrl+K command palette.",project:"Portfolio",publishedAt:"2026-09-25",expiresAt:"2026-12-24",link:"#lab"},
+  {id:"u-hero-0923",type:"update",title:"Hero Presentation Refined",description:"Updated the hero portrait and overall page presentation for a cleaner first impression.",project:"Portfolio",publishedAt:"2026-09-23",expiresAt:"2026-12-22",link:"#main-content"},
+  {id:"u-publish-0922",type:"status",title:"Portfolio Published",description:"Published the portfolio on its own domain at erickpradhan.com.np.",project:"Portfolio",publishedAt:"2026-09-22",expiresAt:"2026-10-22",link:"#main-content"},
+  {id:"u-first-0921",type:"project",title:"First Projects Added",description:"Added the IoT Smart Agriculture system and the Diwali Sales Data Analysis project.",project:"Portfolio",publishedAt:"2026-09-21",link:"#work"}
 ];
 
 const UPD_MAX=8;
@@ -277,20 +286,67 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"
 // Dedupe by stable id, then newest first. Curated entries can't duplicate per edit,
 // but this keeps a repeated id from ever rendering twice.
 function dedupeById(list){const seen=new Set();return list.filter(e=>e&&e.id&&!seen.has(e.id)&&(seen.add(e.id),true))}
-function relTime(iso){const then=new Date(iso+"T00:00:00");if(isNaN(then))return"";const days=Math.floor((Date.now()-then.getTime())/864e5);if(days<=0)return"Today";if(days===1)return"Yesterday";if(days<7)return days+" days ago";if(days<14)return"1 week ago";if(days<31)return Math.floor(days/7)+" weeks ago";return then.toLocaleDateString("en-GB",{day:"numeric",month:"short"})}
+// `publishedAt` is the canonical field; `date` is still accepted so older entries keep working.
+function publishedOf(e){return String(e&&(e.publishedAt||e.date)||"")}
+// Parse "YYYY-MM-DD" as local midnight (ISO date strings would parse as UTC and can
+// land on the previous day). Returns null when absent or malformed, which routes the
+// entry to the default lifetime below rather than retiring it on a bad date string.
+function parseDay(iso){const s=String(iso||"").trim();if(!/^\d{4}-\d{2}-\d{2}/.test(s))return null;const d=new Date(s.slice(0,10)+"T00:00:00");return isNaN(d)?null:d}
+// Today's local midnight, so an entry stays visible through the whole of its expiry day.
+function todayDay(){const n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())}
+function addDays(day,n){const d=new Date(day.getTime());d.setDate(d.getDate()+n);return d}
+// Effective expiry for an entry: its own stored date, or publishedAt + the default
+// lifetime when no explicit date is given. null = no expiry.
+function expiryOf(e,now){const explicit=parseDay(e&&e.expiresAt);if(explicit)return explicit;const pub=parseDay(publishedOf(e));return pub?addDays(pub,DEFAULT_LIFETIME_DAYS):null}
+// Expired entries are dropped before rendering, so they can never appear anywhere in
+// the active notification UI and can never count towards the unread badge.
+function isActive(e,now){const exp=expiryOf(e,now);return !exp||exp>=now}
+// Whole days left, inclusive of today, so the publication day of a 30-day entry reads
+// "30 days left" and its final day reads "Expires today".
+function remainingDays(e,now){const exp=expiryOf(e,now);return exp?Math.max(0,Math.round((exp-now)/864e5)):null}
+function relTime(iso){const then=parseDay(iso);if(!then)return"";const days=Math.floor((Date.now()-then.getTime())/864e5);if(days<=0)return"Today";if(days===1)return"Yesterday";if(days<7)return days+" days ago";if(days<14)return"1 week ago";if(days<31)return Math.floor(days/7)+" weeks ago";return then.toLocaleDateString("en-GB",{day:"numeric",month:"short"})}
 function statusPill(status){return status?`<span class="upd-status" data-status="${esc(status)}">${esc(status)}</span>`:""}
 
 const READ_KEY="ep.updates.seen";
+const UPDATES_KEY="ep.updates.known";
 function loadSeen(){try{const v=JSON.parse(localStorage.getItem(READ_KEY)||"null");return Array.isArray(v)?v.filter(x=>typeof x==="string"):null}catch(e){return null}}
 function saveSeen(ids){try{localStorage.setItem(READ_KEY,JSON.stringify(ids))}catch(e){}}
+function loadKnown(){try{const v=JSON.parse(localStorage.getItem(UPDATES_KEY)||"null");return Array.isArray(v)?v.filter(x=>typeof x==="string"):null}catch(e){return null}}
+function saveKnown(ids){try{localStorage.setItem(UPDATES_KEY,JSON.stringify(ids))}catch(e){}}
 
-const updateEntries=dedupeById(UPDATES).sort((a,b)=>(b.date||"").localeCompare(a.date||"")).slice(0,UPD_MAX);
+let now0=todayDay();
+// Only entries whose stored expiry has not passed are ever rendered or counted.
+function activeUpdateEntries(now){
+  return dedupeById(UPDATES).filter(e=>isActive(e,now)).sort((a,b)=>publishedOf(b).localeCompare(publishedOf(a))).slice(0,UPD_MAX);
+}
+let updateEntries=activeUpdateEntries(now0);
 const currentEntries=dedupeById(CURRENT_WORK);
-const currentIds=updateEntries.map(e=>e.id);
+let currentIds=updateEntries.map(e=>e.id);
 let seen=loadSeen();
+// Expired ids are dropped from stored read state too, so the list stays bounded and a
+// retired update can never resurface as unread if its id is ever reused.
+if(seen&&seen.some(id=>!currentIds.includes(id))){seen=seen.filter(id=>currentIds.includes(id));saveSeen(seen)}
+// Returned visitors get a bell dot for anything published since their last visit; the
+// feed is rendered from data on every load, so nothing is ever duplicated.
+const known=loadKnown();
+const isFirstVisit=known===null;
+if(isFirstVisit||!currentIds.every(id=>known.includes(id))){
+  seen=isFirstVisit?currentIds.slice():seen.slice();
+  saveSeen(seen);
+  saveKnown(currentIds);
+}
 // First visit: treat everything already published as seen so the bell starts quiet.
-if(seen===null){seen=currentIds.slice();saveSeen(seen)}
 const unreadCount=()=>currentIds.filter(id=>!seen.includes(id)).length;
+// Re-applies the expiry filter and re-renders, so an update that lapses while the tab
+// is idle disappears on its own instead of lingering until the next full page load.
+function refreshUpdates(){
+  const today=todayDay();
+  updateEntries=activeUpdateEntries(today);
+  now0=today;
+  currentIds=updateEntries.map(e=>e.id);
+  if(seen.some(id=>!currentIds.includes(id))){seen=seen.filter(id=>currentIds.includes(id));saveSeen(seen)}
+  renderUpdates();renderBell();
+}
 
 function renderCurrentWork(){
   if(!currentEntries.length){updatesCurrent.innerHTML='<p class="upd-empty">Nothing in active development right now.</p>';return}
@@ -306,8 +362,15 @@ function renderUpdates(){
   updatesList.innerHTML=updateEntries.map(item=>{
     const icon=`<span class="upd-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${UPD_ICONS[item.type]||UPD_ICONS.update}</svg></span>`;
     const link=item.link?`<a class="upd-goal" href="${esc(item.link)}">Open <span aria-hidden="true">↗</span></a>`:"";
-    const unread=seen.includes(item.id)?"":" unread";
-    return `<li class="upd-item${unread}">${icon}<div class="upd-main"><div class="upd-title">${esc(item.title)}</div>${item.description?`<p class="upd-desc">${esc(item.description)}</p>`:""}<div class="upd-meta">${item.project?`<span class="upd-project">${esc(item.project)}</span>`:""}<span class="upd-time">${esc(relTime(item.date))}</span>${link}</div></div></li>`;
+    const isRead=seen.includes(item.id);
+    // Keyboard-reachable way to clear a single unread item; mouse users can also just
+    // click the row. Both routes run through markItemRead.
+    const markBtn=isRead?"":`<button class="upd-markread" type="button" data-read-id="${esc(item.id)}" aria-label="Mark &quot;${esc(item.title)}&quot; as read">Mark read</button>`;
+    // Honest lifetime label — the stored expiry date, never an invented percentage.
+    const left=remainingDays(item,now0);
+    const life=left===null?"":`<span class="upd-life">${left>1?`${left} days left`:left===1?"1 day left":"Expires today"}</span>`;
+    const meta=[item.project?`<span class="upd-project">${esc(item.project)}</span>`:"",`<span class="upd-time">${esc(relTime(publishedOf(item)))}</span>`,life,markBtn,link].join("");
+    return `<li class="upd-item${isRead?"":" unread"}" data-upd-id="${esc(item.id)}">${icon}<div class="upd-main"><div class="upd-title">${esc(item.title)}</div>${item.description?`<p class="upd-desc">${esc(item.description)}</p>`:""}<div class="upd-meta">${meta}</div></div></li>`;
   }).join("");
 }
 function renderBell(){
@@ -317,6 +380,25 @@ function renderBell(){
   if(markAllBtn)markAllBtn.hidden=n===0;
   if(updatesCount)updatesCount.textContent=n?`${n} unread`:"All caught up";
 }
+// Marks one update read and persists immediately, so the state survives the session.
+// Only the affected row is touched (rather than a full re-render) so keyboard focus is
+// never dropped onto the page body when the row's own "Mark read" button disappears.
+function markItemRead(id){
+  if(!id||seen.includes(id))return false;
+  seen=seen.concat(id);
+  saveSeen(seen);
+  const row=[...updatesList.querySelectorAll(".upd-item")].find(el=>el.dataset.updId===id);
+  if(row){
+    row.classList.remove("unread");
+    const btn=row.querySelector(".upd-markread");
+    if(btn){
+      if(btn===document.activeElement)(row.querySelector(".upd-goal")||updatesPanel).focus({preventScroll:true});
+      btn.remove();
+    }
+  }
+  renderBell();
+  return true;
+}
 function markAllRead(){seen=currentIds.slice();saveSeen(seen);renderUpdates();renderBell()}
 function setUpdatesOpen(open){
   updatesPanel.classList.toggle("open",open);
@@ -324,7 +406,7 @@ function setUpdatesOpen(open){
   if(bellBtn)bellBtn.setAttribute("aria-expanded",String(open));
   // Focus the panel itself rather than a child control: "Mark all as read" is
   // hidden when there is nothing unread, and focusing a hidden element is a no-op.
-  if(open){renderUpdates();renderBell();updatesOpener=bellBtn||document.activeElement;updatesPanel.focus({preventScroll:true})}
+  if(open){refreshUpdates();updatesOpener=bellBtn||document.activeElement;updatesPanel.focus({preventScroll:true})}
   else if(updatesOpener&&updatesOpener.isConnected){updatesOpener.focus();updatesOpener=null}
 }
 function openUpdates(){
@@ -340,8 +422,23 @@ if(updatesPanel&&bellBtn){
   bellBtn.addEventListener("click",()=>updatesPanel.classList.contains("open")?closeUpdates():openUpdates());
   $("#closeUpdates").addEventListener("click",closeUpdates);
   if(markAllBtn)markAllBtn.addEventListener("click",markAllRead);
-  // Following an in-panel link navigates the page, so close the panel.
-  updatesPanel.addEventListener("click",e=>{if(e.target.closest(".upd-goal"))closeUpdates()});
+  // Opening an update marks it read. The per-row button handles keyboard users; a plain
+  // click anywhere on the row does the same for pointer users. Following an in-panel
+  // link navigates the page, so the panel closes too.
+  // Clicks that start inside the panel are handled here and stop here: marking read
+  // removes the button from the DOM, which would otherwise make the outside-click
+  // handler below treat the click as external and close the panel under the user.
+  updatesPanel.addEventListener("click",e=>{
+    e.stopPropagation();
+    const mark=e.target.closest(".upd-markread");
+    if(mark){markItemRead(mark.dataset.readId);return}
+    if(e.target.closest(".upd-goal")){const row=e.target.closest(".upd-item");if(row)markItemRead(row.dataset.updId);closeUpdates();return}
+    const row=e.target.closest(".upd-item");
+    if(row)markItemRead(row.dataset.updId);
+  });
   document.addEventListener("click",e=>{if(!updatesPanel.contains(e.target)&&!bellBtn.contains(e.target))closeUpdates()});
   updatesPanel.addEventListener("keydown",e=>{if(e.key==="Escape"){e.stopPropagation();closeUpdates()}});
+  // A notification that lapses while the tab sits idle drops out of the panel and out of
+  // the unread count on the next check (on page load, on panel open, and on tab return).
+  document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")refreshUpdates()});
 }

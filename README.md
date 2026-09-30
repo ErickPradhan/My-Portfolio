@@ -48,11 +48,29 @@ GitHub Pages requires the `CNAME` file (with `erickpradhan.com.np`) at the repos
 The bell icon in the navigation opens an **Updates** panel with a *Currently Working On* block and a *Recent* list. Both are driven by two plain arrays at the top of the V2-C section in `script.js` — there is no backend, database, or build step, and raw git/infrastructure events are never surfaced.
 
 - `CURRENT_WORK` — `{ id, project, status, note, link, progress }`. `status` is one of `In Progress`, `Completed`, `Planning`, `On Hold`, `Archived`. `progress` is optional and renders a bar **only** when set to a real number, so no percentage is ever invented.
-- `UPDATES` — `{ id, type, title, description, project, date, link }`. `type` is one of `project`, `document`, `milestone`, `status`, `update`, `achievement` and selects the icon. `date` is `YYYY-MM-DD`.
+- `UPDATES` — `{ id, type, title, description, project, publishedAt, expiresAt, link }`. `type` is one of `project`, `document`, `milestone`, `status`, `update`, `achievement` and selects the icon. Dates are `YYYY-MM-DD`.
 
-Write updates as visitor-facing outcomes ("Published the project report for…"), not as change-log entries ("Fixed the build").
+Write updates as visitor-facing outcomes ("Published the project report for…"), not as change-log entries ("Fixed the build"). Keep the feed low-noise: new projects, major features, milestones, certifications, portfolio features, and achievements only. Do **not** add an update for CSS or spacing tweaks, typo fixes, minor visual changes, or internal refactoring.
 
-Entries are deduplicated by `id` and the recent list is capped at 8. The unread dot reflects updates added since the visitor's last visit and is stored in `localStorage` under `ep.updates.seen`, so read state is per-browser: it does not sync across devices and resets if site data is cleared. On a first-ever visit everything already published is treated as read, so the bell starts quiet.
+Entries are deduplicated by `id` and the recent list is capped at 8.
+
+### Notification expiry
+
+Every notification carries its own lifetime, so nothing depends on a blanket "30 days" rule:
+
+- `publishedAt` — the day the update went live (also what the relative timestamp is measured from). The legacy field name `date` is still accepted.
+- `expiresAt` — the **last day** the update stays in the panel. Omit it and `DEFAULT_LIFETIME_DAYS` (30) is applied to `publishedAt` instead.
+
+An update whose `expiresAt` has passed is filtered out *before* rendering, so it can never appear in the list and can never count towards the unread badge. Expiry is re-checked on page load, every time the panel is opened, and when the tab becomes visible again, so a notification that lapses while the tab sits idle disappears on its own. Each active row also shows a factual "N days left" / "Expires today" label derived from its own stored expiry — that is a countdown to the expiry date, not a progress percentage.
+
+### Read / unread
+
+The unread dot reflects updates published since the visitor's last visit. Read state is stored per-browser in `localStorage`:
+
+- `ep.updates.seen` — ids the visitor has already read. Marks persist during normal page use, and clicking a notification (or its **Mark read** button) saves immediately.
+- `ep.updates.known` — the id set that existed on their last visit. Compared against the live list so only genuinely new ids light up the bell; expired ids are pruned from both keys so the stored lists stay bounded.
+
+On a first-ever visit everything already published is treated as read, so the bell starts quiet. Read state does not sync across devices and resets if site data is cleared.
 
 ## Interactive features
 
@@ -62,6 +80,6 @@ Entries are deduplicated by `id` and the recent list is capped at 8. The unread 
 - **Typing headlines**: About and CV headings type out live (paused when off-screen; static text shown for reduced-motion and no-JS).
 - **Interactive sections**: Skill wall and journey timeline show contextual tooltips / categories on hover or focus; stack chips and process cards respond to hover/focus.
 - **Contact form**: Locally validated (no backend — nothing is sent); shows a demo success state when valid.
-- **Activity & current work**: Bell icon in the nav opens an Updates panel showing what is new plus what is currently in development, with an unread dot for updates added since the last visit. Curated content only — no developer activity log.
+- **Activity & current work**: Bell icon in the nav opens an Updates panel showing what is new plus what is currently in development, with an unread dot for updates published since the last visit. Each notification carries its own expiry and drops out of the panel automatically when it lapses. Curated content only — no developer activity log.
 
 No framework or build step is required.

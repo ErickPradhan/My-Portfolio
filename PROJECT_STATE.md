@@ -370,3 +370,68 @@ Scope: **targeted polish only** — per-key palette hint glows, a slower (10 s) 
 - Contact inputs and textarea retain the dark field appearance during Chrome/Edge autofill, with readable text and preserved focus styling.
 - The hero quote card now displays only the Michael Scott quote. The quote text is quoted separately from the em-dash attribution, and the card uses natural content height without a rotation timer.
 - The hero portrait now crossfades between `assets/images/Porfolio.jpg` and `assets/images/Porfolio1.jpg` every 15 seconds inside the existing fixed portrait frame, preserving the image dimensions and layout.
+
+## V2-D — Notification expiry & read state (2026-09-30)
+
+Scope, as narrowed on 2026-09-30: refine the **existing** notification bell/panel only. No project-card "In Progress" work, no backend, no database, no push/analytics, no new features. The bell, panel, markup, and design were extended in place — not rebuilt.
+
+Files touched: `script.js`, `styles.css`, `README.md`, `PROJECT_STATE.md`. **`index.html` is untouched.**
+
+### Notification lifetime — per notification, not one blanket rule
+
+- `UPDATES` entries now carry `publishedAt` (canonical) and an optional `expiresAt`. The legacy `date` field is still read through `publishedOf()`, so older entries keep working.
+- `DEFAULT_LIFETIME_DAYS = 30` is a **fallback only**, applied when an entry supplies no `expiresAt`. Every shipped entry sets its own expiry, so lifetimes genuinely differ — measured remaining days are `30, 89, 89, 85, 83, 22, 21`. Nothing runs on a hardcoded "30 days" comparison.
+- `isActive()` / `activeUpdateEntries()` filter expired entries out **before** rendering, so an expired notification can never appear in the panel and never enters `currentIds` — i.e. it can never reach the unread badge.
+- `parseDay()` reads `YYYY-MM-DD` as **local midnight** (a bare ISO date parses as UTC and can land a day early). A malformed value returns `null`, which routes the entry to the default lifetime rather than retiring it instantly or keeping it forever.
+- `expiresAt` is **inclusive** — an entry stays visible through the whole of its expiry day.
+- Expiry is re-evaluated on page load, on every panel open (`refreshUpdates()` from `setUpdatesOpen(true)`), and on `visibilitychange` → visible, so a notification that lapses while a tab sits idle removes itself without a reload.
+- Each active row shows a factual `.upd-life` label ("N days left" / "1 day left" / "Expires today") derived from its own stored expiry. It counts down to the expiry **date** — it is not a progress percentage, and no percentage appears anywhere.
+
+### New notification
+
+- `u-notify-0930` — **Notifications Added** / "Stay updated with the latest portfolio projects, achievements, and improvements." — `type:"update"` (existing refresh icon), `project:"Portfolio"`, `publishedAt:"2026-09-30"`, `expiresAt:"2026-10-30"` (the 30-day default, stored explicitly), `link:"#work"` (Selected Systems — where portfolio updates land).
+
+### Read / unread
+
+- Existing behaviour preserved: a first-ever visit treats everything already published as read, so the bell starts quiet; returning visitors get a dot for anything published since their last visit.
+- **Latent bug fixed.** First-visit detection relied on `seen === null`. Adding an update set `seen` to non-null, so on the very next page load `!currentIds.every(id=>seen.includes(id))` went true and the new id was written straight into `seen` — the dot lit up for exactly one page load, then self-cleared. A new `ep.updates.known` key now holds the id set from the visitor's previous visit, so only genuinely new ids stay unread. `ep.updates.seen` still stores read state; its writes are unchanged.
+- Expired ids are pruned from both stored keys on load and on refresh, so the lists stay bounded and a retired id can never resurface as unread if reused.
+- **Mark one as read** added: each unread row carries a `Mark read` button (rendered only while unread, real `type="button"`, `aria-label="Mark \"<title>\" as read"`). Clicking anywhere on the row also marks it read, and following the existing `Open ↗` link marks it read and closes the panel. `markItemRead()` updates only the affected row instead of re-rendering the list, so keyboard focus is handed to the row's link rather than dropped on `<body>` when the button disappears.
+- **Mark all as read** unchanged in behaviour and still hides itself when nothing is unread.
+
+### Bug found and fixed during verification
+
+Clicking the new per-row **Mark read** button closed the panel and threw focus back to the bell. Cause: `markItemRead()` removes the button from the DOM, then the click bubbled to the document-level outside-click handler, which saw a now-detached target as "outside" the panel and closed it. Fixed by stopping propagation on clicks that originate inside `#updatesPanel` — in-panel clicks are handled by the panel and never reach the outside-click handler. Re-verified: the panel stays open and focus lands on the row's `Open` link.
+
+### No duplicates
+
+The feed is re-derived from the `UPDATES` array on every load and deduplicated by `id` before rendering. Nothing is appended at runtime. Verified across three consecutive loads: identical 7 rows, identical 7 ids each time.
+
+### Deliberately not done
+
+- **No project-card "In Progress" changes.** An earlier draft added card `id`s, a `PROJECT_STATUS` map, `applyProjectStatus()`, and `.project-status` CSS. All of it was reverted; `index.html` is byte-identical to the previous commit and the project cards render exactly as before. `CURRENT_WORK` (the panel's *Currently Working On* block) is untouched.
+- **No backend, database, push notifications, or analytics.**
+- **No existing notification deleted.** Entries were not retroactively pruned.
+- **No new icon type.** The `notice` variant was dropped as unused scope.
+
+### Verification — V2-D (2026-09-30)
+
+Two suites, both green. Unlike earlier passes this ran the **real shipped code in a real browser** (headless Edge/Chromium, `--headless=new --dump-dom`, over a local static server) rather than static reasoning alone.
+
+1. `node --check script.js` — **PASS** (syntax OK).
+2. Static suite (33 checks) — **ALL PASS**: HTML tag balance; JSON-LD `Person` parses with an apex `url`; all 7 internal anchors resolve to real `id`s; all 8 local `href`/`src` refs exist on disk; CSS braces balanced 505/505; `no-js`/`js` reveal gate intact; zero `vercel` and zero `www.erickpradhan` references; `CNAME`/`robots.txt`/`sitemap.xml` all apex. Architecture guards: no `package.json`, still exactly **one** `<script src>` (`script.js`), no CDN or framework reference; notification markup still generated purely from data (zero hardcoded `.upd-item` or notification copy in `index.html`); every `UPDATES` entry has `publishedAt`; more than one distinct `expiresAt` stored; no numeric `progress` introduced; bell `aria-haspopup`/`aria-controls`/`aria-expanded` and panel `role="dialog"`/`aria-modal="false"`/`aria-labelledby` intact; `#updatesCount` still a polite live region; global reduced-motion rule still neutralises animations.
+3. Runtime suite — **260 assertions across 3 scenarios, 0 failures** (`fresh` first visit, `returning` visitor whose last visit predates the notification, `corrupt` malformed/stale `localStorage`), plus the full 106-check set re-run at a mobile viewport — also 0 failures. Coverage:
+   - Notification content matches the spec exactly (title, message, type, `publishedAt`, `expiresAt`, resolving `link`).
+   - Expiry is per-notification; explicit `expiresAt` overrides the default; a missing one falls back to `publishedAt + 30`; a 2-day life hides early; entries are active **on** their expiry day and hidden the day after.
+   - Bell opens/closes; `aria-expanded`/`aria-hidden` flip; focus lands on the panel and returns to the bell; Escape closes; inside-click keeps it open; outside-click closes.
+   - First visit: bell quiet, dot hidden, mark-all hidden, "All caught up". Returning visit: the new notification renders, is unread, lights the dot, reads "1 unread", has the unread indicator and a labelled **Mark read** button; read rows have no such button.
+   - Forcing an entry past its expiry removed it from the panel, dropped the unread count to 0, hid the dot, and pruned the id from stored read state.
+   - Mark-as-read via all three routes (button, row click, following the link) each cleared unread state and persisted it; mark-all cleared all 7 and hid itself; focus was handed to the row's link rather than dropped on `<body>`.
+   - No invented percentages: no `.upd-bar` in the list, no `%` in the update list or the current-work block; lifetime labels read as day counts.
+   - Layout/a11y: no horizontal page overflow; panel fits the viewport at desktop **and** mobile widths; panel body scrolls; no positive tabindex; decorative icons `aria-hidden`; mark-read buttons are real labelled buttons and keyboard reachable.
+   - Unrelated features still live: assistant, command palette, AI Lab terminal, contact form (4 fields), all six anchored sections, current-work block with its 4 items and 2 `In Progress` pills.
+   - Zero console errors and zero uncaught exceptions in every scenario.
+
+### Status
+
+Uncommitted in the working tree. `git status` shows only `script.js`, `styles.css`, `README.md`, `PROJECT_STATE.md`. Not committed/pushed by design. The live site still runs the previous version until this is committed and deployed.
