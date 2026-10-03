@@ -316,8 +316,9 @@ kbd{display:inline-block;min-width:18px;padding:2px 6px;border:1px solid rgba(25
 
 /* 6. Technical stack — hover/focus highlight + context line (no fake proficiency values) */
 .skill-cluster span{transition:color .2s ease,text-shadow .2s ease;cursor:default}
-.skill-cluster span:hover,.skill-cluster span:focus-visible,.skill-cluster span.skill-hot{color:var(--blue2);text-shadow:0 0 12px rgba(46,155,255,.45)}
-.skill-cluster span:focus-visible{outline:2px solid var(--blue2);outline-offset:3px}
+.skill-cluster a[data-skill]{display:block;color:#a4afbb;font-size:13px;margin:13px 0;transition:color .2s ease,text-shadow .2s ease;cursor:pointer}
+.skill-cluster span:hover,.skill-cluster span:focus-visible,.skill-cluster span.skill-hot,.skill-cluster a[data-skill]:hover,.skill-cluster a[data-skill]:focus-visible,.skill-cluster a[data-skill].skill-hot{color:var(--blue2);text-shadow:0 0 12px rgba(46,155,255,.45)}
+.skill-cluster span:focus-visible,.skill-cluster a[data-skill]:focus-visible{outline:2px solid var(--blue2);outline-offset:3px}
 .skill-context{margin:16px 0 0;min-height:18px;border-left:2px solid var(--blue);padding-left:12px;color:var(--muted);font:500 12px/1.6 "Space Grotesk";letter-spacing:.3px}
 
 /* 7. Journey — interactive timeline nodes + progress line */
@@ -467,7 +468,6 @@ kbd{display:inline-block;min-width:18px;padding:2px 6px;border:1px solid rgba(25
 .updates-list{list-style:none;margin:0;padding:0}
 .upd-item{display:flex;gap:11px;padding:12px 10px;border-radius:7px;transition:background .2s ease}
 .upd-item+.upd-item{border-top:1px solid rgba(255,255,255,.05)}
-.upd-item:hover{background:rgba(46,155,255,.07)}
 .upd-item.unread{background:rgba(46,155,255,.05);box-shadow:inset 2px 0 0 var(--blue)}
 .upd-ico{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;border:1px solid rgba(46,155,255,.3);background:rgba(46,155,255,.08);color:var(--blue2)}
 .upd-ico svg{width:14px;height:14px}

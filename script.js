@@ -54,7 +54,7 @@ else{const observer=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersect
 
 // Active nav
 const sections=[...$$("main section[id]")], navLinks=[...$$(".nav nav a")];
-function updateActiveNav(){let y=scrollY+150;let current=sections.reduce((a,s)=>s.offsetTop<=y?s:a,sections[0]);navLinks.forEach(a=>a.classList.toggle("active",a.getAttribute("href")==="#"+current.id))}
+function updateActiveNav(){let y=scrollY+150;let current=sections.reduce((a,s)=>s.offsetTop<=y?s:a,null);navLinks.forEach(a=>a.classList.toggle("active",!!current&&a.getAttribute("href")==="#"+current.id))}
 addEventListener("scroll",updateActiveNav,{passive:true});updateActiveNav();
 
 // Cursor glow
@@ -191,7 +191,7 @@ const skillNote=$("#skillContext");
 const DEF_SKILL="Hover or focus a skill to see how it shows up in my work.";
 function showSkill(sp){if(skillNote){const k=(sp.textContent||"").trim().toLowerCase();const cat=sp.closest(".skill-cluster");skillNote.textContent=skillMap[k]||(cat?cat.querySelector("h3").textContent+" — part of my active toolkit.":"Skill highlighted.")}sp.classList.add("skill-hot")}
 function clearSkills(){if(skillNote)skillNote.textContent=DEF_SKILL;$$(".skill-hot").forEach(s=>s.classList.remove("skill-hot"))}
-$$(".skill-cluster span").forEach(sp=>{sp.addEventListener("focus",()=>showSkill(sp));sp.addEventListener("blur",clearSkills);sp.addEventListener("mouseenter",()=>showSkill(sp));sp.addEventListener("mouseleave",clearSkills)});
+$$(".skill-cluster [data-skill]").forEach(sp=>{sp.addEventListener("focus",()=>showSkill(sp));sp.addEventListener("blur",clearSkills);sp.addEventListener("mouseenter",()=>showSkill(sp));sp.addEventListener("mouseleave",clearSkills)});
 
 // AI Lab research slots — focus/hover preview, clearly exploration/queued
 const labNote=$("#labSlotNote");
@@ -409,8 +409,7 @@ function renderUpdates(){
     const icon=`<span class="upd-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${UPD_ICONS[item.type]||UPD_ICONS.update}</svg></span>`;
     const link=item.link?`<a class="upd-goal" href="${esc(item.link)}">Open <span aria-hidden="true">↗</span></a>`:"";
     const isRead=seen.includes(item.id);
-    // Keyboard-reachable way to clear a single unread item; mouse users can also just
-    // click the row. Both routes run through markItemRead.
+    // Explicit, keyboard-reachable control for clearing a single unread item.
     const markBtn=isRead?"":`<button class="upd-markread" type="button" data-read-id="${esc(item.id)}" aria-label="Mark &quot;${esc(item.title)}&quot; as read">Mark read</button>`;
     // Honest lifetime label — the stored expiry date, never an invented percentage.
     const left=remainingDays(item,now0);
@@ -468,9 +467,8 @@ if(updatesPanel&&bellBtn){
   bellBtn.addEventListener("click",()=>updatesPanel.classList.contains("open")?closeUpdates():openUpdates());
   $("#closeUpdates").addEventListener("click",closeUpdates);
   if(markAllBtn)markAllBtn.addEventListener("click",markAllRead);
-  // Opening an update marks it read. The per-row button handles keyboard users; a plain
-  // click anywhere on the row does the same for pointer users. Following an in-panel
-  // link navigates the page, so the panel closes too.
+  // Only the explicit per-row or mark-all controls change read state. Following an
+  // in-panel link navigates to its destination and closes the panel without changing it.
   // Clicks that start inside the panel are handled here and stop here: marking read
   // removes the button from the DOM, which would otherwise make the outside-click
   // handler below treat the click as external and close the panel under the user.
@@ -478,9 +476,7 @@ if(updatesPanel&&bellBtn){
     e.stopPropagation();
     const mark=e.target.closest(".upd-markread");
     if(mark){markItemRead(mark.dataset.readId);return}
-    if(e.target.closest(".upd-goal")){const row=e.target.closest(".upd-item");if(row)markItemRead(row.dataset.updId);closeUpdates();return}
-    const row=e.target.closest(".upd-item");
-    if(row)markItemRead(row.dataset.updId);
+    if(e.target.closest(".upd-goal")){closeUpdates();return}
   });
   document.addEventListener("click",e=>{if(!updatesPanel.contains(e.target)&&!bellBtn.contains(e.target))closeUpdates()});
   updatesPanel.addEventListener("keydown",e=>{if(e.key==="Escape"){e.stopPropagation();closeUpdates()}});
