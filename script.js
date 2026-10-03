@@ -152,10 +152,7 @@ let key="";addEventListener("keydown",e=>{key=(key+e.key.toLowerCase()).slice(-6
 
 // ===== V2-B — INTERACTION + UX POLISH =====
 
-// Keyboard accessibility for chips, cards, facts (static upgrade; no new dependencies)
-$$(".techs span").forEach(s=>s.setAttribute("tabindex","0"));
-$$(".process-card.card-lift").forEach(c=>c.setAttribute("tabindex","0"));
-$$(".fact-card").forEach(c=>c.setAttribute("tabindex","0"));
+// Keyboard access for skill labels that expose contextual guidance.
 $$(".skill-cluster span").forEach(s=>s.setAttribute("tabindex","0"));
 
 // Typing effects (About callback statement + CV call-to-action).
@@ -214,11 +211,11 @@ if(contactForm&&contactSuccess){
   ];
   const cfErr={name:$("#cfNameErr"),email:$("#cfEmailErr"),subject:$("#cfSubjectErr"),message:$("#cfMessageErr")};
   const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-  const nameRe=/^\p{L}[\p{L}'\s-]*\p{L}$/u;
+  const nameRe=/^\p{L}(?:[\p{L}\p{M}'’ -]*[\p{L}\p{M}])?$/u;
   function setErr(key,msg){const e=cfErr[key];if(e)e.textContent=msg}
-  function validate(){let first=null;fields.forEach(([key,el])=>{const v=(el.value||"").trim();let m="";if(key==="name"){if(v.length<2)m="Please enter your name.";else if(!nameRe.test(v))m="Use your name — letters, spaces, hyphens, or apostrophes only (no digits or symbols).";else if(v.length>80)m="Name is too long — keep it under 80 characters."}else if(key==="email"){if(!emailRe.test(v))m="Enter a valid email address."}else if(key==="subject"){if(v.length<3)m="Add a short subject."}else if(v.length<10)m="Message should be at least 10 characters.";if(m){el.setAttribute("aria-invalid","true");setErr(key,m);if(!first)first=el}else{el.setAttribute("aria-invalid","false");setErr(key,"")}});return first}
+  function validate(){let first=null;fields.forEach(([key,el])=>{const v=(el.value||"").trim();let m="";if(key==="name"){if(v.length<1)m="Please enter your name.";else if(!nameRe.test(v))m="Use your name — letters, spaces, hyphens, or apostrophes only (no digits or symbols).";else if(v.length>80)m="Name is too long — keep it under 80 characters."}else if(key==="email"){if(!emailRe.test(v))m="Enter a valid email address."}else if(key==="subject"){if(v.length<3)m="Add a short subject."}else if(v.length<10)m="Message should be at least 10 characters.";if(m){el.setAttribute("aria-invalid","true");setErr(key,m);if(!first)first=el}else{el.setAttribute("aria-invalid","false");setErr(key,"")}});return first}
   contactForm.addEventListener("submit",e=>{e.preventDefault();const bad=validate();if(bad){bad.focus();return}contactForm.hidden=true;contactSuccess.hidden=false});
-  fields.forEach(([key,el])=>{el.addEventListener("input",()=>{const v=(el.value||"").trim();const ok=key==="name"?v.length>=2&&nameRe.test(v):key==="email"?emailRe.test(v):key==="subject"?v.length>=3:v.length>=10;if(ok){el.setAttribute("aria-invalid","false");setErr(key,"")}})});
+  fields.forEach(([key,el])=>{el.addEventListener("input",()=>{const v=(el.value||"").trim();const ok=key==="name"?v.length>=1&&nameRe.test(v):key==="email"?emailRe.test(v):key==="subject"?v.length>=3:v.length>=10;if(ok){el.setAttribute("aria-invalid","false");setErr(key,"")}})});
   if(cfReset)cfReset.addEventListener("click",()=>{fields.forEach(([,el])=>{el.value="";el.setAttribute("aria-invalid","false")});Object.keys(cfErr).forEach(k=>setErr(k,""));contactSuccess.hidden=true;contactForm.hidden=false;const n=fields[0][1];if(n)n.focus()});
 }
 
@@ -228,8 +225,9 @@ emailCompose.forEach(a=>{
   a.addEventListener("click",e=>{
     const to=(a.dataset.to||"").trim();
     if(!to)return;
-    const win=window.open("https://mail.google.com/mail/?view=cm&fs=1&to="+to,"_blank","noopener");
+    const win=window.open("https://mail.google.com/mail/?view=cm&fs=1&to="+to,"_blank");
     if(win===null||win===undefined)return;
+    win.opener=null;
     e.preventDefault();
   });
 });
