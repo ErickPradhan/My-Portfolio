@@ -125,7 +125,7 @@ const termCmds={
   projects:"Featured work: 1) IoT Smart Agriculture — ESP32 field system with automated irrigation, Blynk monitoring, and a 6-phase build verification (project document available). 2) Diwali Sales Data Analysis — 11,251 transactions, EDA with ANOVA (F = 2.477, p = 0.00166) and Chi-square (χ² = 1634.97) testing.",
   skills:"AI / ML: Machine Learning, Generative AI, LLM APIs, AI Automation, Data Analysis. Engineering: Python, Java, JavaScript, SQL, REST APIs, React.js, Node.js, HTML/CSS. Data / Cloud: MySQL, MongoDB, Supabase, DynamoDB, AWS, Docker. Systems: Git/GitHub, Linux/WSL, Raspberry Pi, Arduino Uno, IoT.",
   stack:"Core: Python, JavaScript, SQL, AWS (EC2, S3, Lambda, SageMaker, Comprehend), Docker, REST APIs, React.js, Node.js, MongoDB, MySQL. See the Skills section for the full wall with self-assessed focus areas.",
-  lab:"Four research slots are tracking experiments: LLM / RAG knowledge systems and AI automation (exploring), computer vision and edge AI (queued). This terminal is local — no external AI.",
+  lab:"Four research slots: applied machine learning, artificial intelligence, big data & data mining, and a final-year project in progress — a web-based public transport application. This terminal is local — no external AI.",
   contact:"Email: erickpradhan2@gmail.com. GitHub: github.com/ErickPradhan. LinkedIn: linkedin.com/in/erick-pradhan. YouTube: youtube.com/@DevBy-x8e.",
   github:"github.com/ErickPradhan — public repos include Iot-Smart-Agricultural-System and DiwaliSales-DataAnalysis."
 };
@@ -178,8 +178,8 @@ if(typeHeadings.length){
 // Technical stack → contextual label (no fake proficiency values)
 const skillMap={
   "machine learning":"Core focus — see the AI Lab and the Diwali Sales statistical analysis.",
-  "generative ai":"Experiment territory — LLM / RAG research slot in AI Lab.",
-  "llm apis":"Exploration track — LLM / RAG research slot in AI Lab.",
+  "generative ai":"Experiment territory — see the research slots in AI Lab.",
+  "llm apis":"Exploration track — see the research slots in AI Lab.",
   "data analysis":"Applied end-to-end in the Diwali Sales Data Analysis project.",
   "python":"Used end-to-end in the Diwali Sales Data Analysis project.",
   "aws":"Cloud foundations — AWS Academy certifications (Dec 2024).",
